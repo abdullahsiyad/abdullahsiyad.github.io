@@ -3,773 +3,452 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Abdullah Siyadh — Automotive Supply Chain & Data Analytics</title>
+  <title>Abdullah Siyadh — Data & Supply Chain</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --gold: #C9A84C;
-      --gold-light: #E8C97A;
-      --gold-dim: #7A6029;
-      --bg: #0A0A08;
-      --bg2: #111110;
-      --bg3: #1A1A17;
-      --border: rgba(201,168,76,0.18);
-      --border-soft: rgba(255,255,255,0.06);
-      --text: #F0EDE4;
-      --text-muted: #8A8880;
-      --text-dim: #4A4A46;
+      --bg: #050508;
+      --bg2: #0C0C12;
+      --bg3: #12121A;
+      --accent: #00F5A0;
+      --accent2: #00B4FF;
+      --accent-dim: rgba(0,245,160,0.12);
+      --border: rgba(255,255,255,0.06);
+      --border-accent: rgba(0,245,160,0.3);
+      --text: #F0F0F8;
+      --text-muted: #6B6B80;
+      --text-dim: #1E1E2A;
+      --grad: linear-gradient(135deg, #00F5A0, #00B4FF);
     }
-
     html { scroll-behavior: smooth; }
+    body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; overflow-x: hidden; }
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.7;
-      overflow-x: hidden;
+    #particle-canvas { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
+
+    .grid-bg {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: linear-gradient(rgba(255,255,255,0.016) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.016) 1px, transparent 1px);
+      background-size: 64px 64px;
     }
 
-    /* ── NOISE TEXTURE ── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.4;
-    }
-
-    /* ── NAV ── */
     nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.25rem 3rem;
-      border-bottom: 0.5px solid var(--border);
-      background: rgba(10,10,8,0.85);
-      backdrop-filter: blur(16px);
+      position: fixed; top:0; left:0; right:0; z-index:100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.25rem 4rem;
+      background: rgba(5,5,8,0.85); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
     }
-
     .nav-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.1rem;
-      font-weight: 400;
-      letter-spacing: 0.12em;
-      color: var(--gold);
+      font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800;
+      background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       text-decoration: none;
-      text-transform: uppercase;
     }
-
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
-
+    .nav-links { display:flex; gap:2.5rem; list-style:none; }
     .nav-links a {
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
+      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-muted); text-decoration: none; transition: color 0.2s; position: relative;
     }
+    .nav-links a::after { content:''; position:absolute; bottom:-4px; left:0; width:0; height:1px; background:var(--accent); transition:width 0.3s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a:hover::after { width:100%; }
 
-    .nav-links a:hover { color: var(--gold); }
-
-    /* ── HERO ── */
     .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 8rem 3rem 4rem;
-      position: relative;
-      overflow: hidden;
+      min-height: 100vh; display:flex; flex-direction:column; justify-content:center;
+      padding: 8rem 4rem 4rem; position:relative; z-index:1;
     }
-
-    .hero::after {
-      content: '';
-      position: absolute;
-      top: -20%;
-      right: -10%;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 65%);
-      pointer-events: none;
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:0.6rem;
+      padding: 0.4rem 1rem; border:1px solid var(--border-accent); background: var(--accent-dim);
+      border-radius: 100px; font-family:'JetBrains Mono',monospace; font-size:0.68rem;
+      color: var(--accent); letter-spacing:0.08em; margin-bottom:2.5rem; width:fit-content;
+      opacity:0; animation: fadeUp 0.6s ease 0.2s forwards;
     }
-
-    .hero-tag {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 2rem;
-      opacity: 0;
-      animation: fadeUp 0.8s ease 0.2s forwards;
-    }
-
+    .hero-badge-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); animation: blink 2s ease-in-out infinite; }
     .hero-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(3.5rem, 9vw, 7.5rem);
-      font-weight: 300;
-      line-height: 0.95;
-      letter-spacing: -0.01em;
-      margin-bottom: 2rem;
-      opacity: 0;
-      animation: fadeUp 0.8s ease 0.4s forwards;
+      font-family:'Syne',sans-serif; font-size:clamp(3.5rem,9vw,8rem); font-weight:800;
+      line-height:0.9; letter-spacing:-0.03em; margin-bottom:1.5rem;
+      opacity:0; animation: fadeUp 0.7s ease 0.4s forwards;
     }
-
-    .hero-name em {
-      font-style: italic;
-      color: var(--gold-light);
+    .hero-name .grad { background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .hero-mono {
+      font-family:'JetBrains Mono',monospace; font-size:0.88rem; color:var(--text-muted);
+      margin-bottom:2rem; opacity:0; animation: fadeUp 0.7s ease 0.6s forwards;
     }
-
-    .hero-divider {
-      width: 60px;
-      height: 1px;
-      background: var(--gold);
-      margin-bottom: 2rem;
-      opacity: 0;
-      animation: expandWidth 0.8s ease 0.6s forwards;
-    }
-
+    .hero-mono .c { color: var(--accent2); }
     .hero-desc {
-      max-width: 520px;
-      font-size: 1.05rem;
-      font-weight: 300;
-      color: var(--text-muted);
-      line-height: 1.8;
-      opacity: 0;
-      animation: fadeUp 0.8s ease 0.8s forwards;
+      max-width:560px; font-size:1.02rem; font-weight:300; color:var(--text-muted); line-height:1.85; margin-bottom:3rem;
+      opacity:0; animation: fadeUp 0.7s ease 0.8s forwards;
     }
-
-    .hero-desc strong {
-      color: var(--text);
-      font-weight: 400;
-    }
-
-    .hero-cta {
-      display: flex;
-      gap: 1rem;
-      margin-top: 3rem;
-      opacity: 0;
-      animation: fadeUp 0.8s ease 1s forwards;
-    }
+    .hero-desc strong { color:var(--text); font-weight:500; }
+    .hero-cta { display:flex; gap:1rem; flex-wrap:wrap; opacity:0; animation: fadeUp 0.7s ease 1s forwards; }
 
     .btn-primary {
-      padding: 0.85rem 2rem;
-      background: var(--gold);
-      color: #0A0A08;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      text-decoration: none;
+      display:inline-flex; align-items:center; gap:0.4rem;
+      padding: 0.85rem 1.8rem; background:var(--grad); color:#050508;
+      font-family:'Space Grotesk',sans-serif; font-size:0.8rem; font-weight:600;
+      letter-spacing:0.07em; text-transform:uppercase; text-decoration:none; border-radius:4px;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { opacity:0.85; transform:translateY(-2px); }
+    .btn-ghost {
+      display:inline-flex; align-items:center; gap:0.4rem;
+      padding: 0.85rem 1.8rem; border:1px solid var(--border-accent); color:var(--accent);
+      font-family:'Space Grotesk',sans-serif; font-size:0.8rem; font-weight:500;
+      letter-spacing:0.07em; text-transform:uppercase; text-decoration:none; border-radius:4px;
       transition: background 0.2s, transform 0.15s;
     }
+    .btn-ghost:hover { background: var(--accent-dim); transform:translateY(-2px); }
 
-    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
-
-    .btn-ghost {
-      padding: 0.85rem 2rem;
-      border: 0.5px solid var(--border);
-      color: var(--text-muted);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 400;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      text-decoration: none;
-      transition: border-color 0.2s, color 0.2s;
+    .hero-stats {
+      display:flex; gap:3.5rem; margin-top:5rem; padding-top:3rem;
+      border-top:1px solid var(--border);
+      opacity:0; animation: fadeUp 0.7s ease 1.2s forwards;
     }
-
-    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
-
-    .hero-scroll {
-      position: absolute;
-      bottom: 2.5rem;
-      left: 3rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      opacity: 0;
-      animation: fadeUp 0.8s ease 1.2s forwards;
+    .hstat-num {
+      font-family:'Syne',sans-serif; font-size:2.2rem; font-weight:800;
+      background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+      line-height:1; margin-bottom:0.3rem;
     }
+    .hstat-label { font-size:0.7rem; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase; }
 
-    .hero-scroll span {
-      font-size: 0.65rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--text-dim);
+    section { padding:7rem 4rem; position:relative; z-index:1; }
+    .sec-eye {
+      font-family:'JetBrains Mono',monospace; font-size:0.65rem; letter-spacing:0.22em;
+      text-transform:uppercase; color:var(--accent); margin-bottom:0.75rem;
+      display:flex; align-items:center; gap:0.75rem;
     }
-
-    .scroll-line {
-      width: 40px;
-      height: 0.5px;
-      background: var(--text-dim);
-      animation: scrollPulse 2s ease-in-out infinite;
+    .sec-eye::before { content:''; width:22px; height:1px; background:var(--accent); }
+    .sec-title {
+      font-family:'Syne',sans-serif; font-size:clamp(2rem,4.5vw,3.5rem); font-weight:800;
+      letter-spacing:-0.03em; line-height:1.05; margin-bottom:4rem;
     }
+    .sec-title .grad { background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
 
-    /* ── SECTION COMMONS ── */
-    section {
-      padding: 6rem 3rem;
-      position: relative;
+    .about-wrap { display:grid; grid-template-columns:1.1fr 0.9fr; gap:5rem; align-items:start; border-top:1px solid var(--border); padding-top:4rem; }
+    .about-text p { color:var(--text-muted); font-weight:300; font-size:0.97rem; margin-bottom:1.25rem; line-height:1.85; }
+    .about-text p strong { color:var(--text); font-weight:500; }
+    .about-cards { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); }
+    .acard {
+      background:var(--bg2); padding:2rem 1.75rem; position:relative; overflow:hidden; transition:background 0.3s;
     }
-
-    .section-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1rem;
+    .acard::before {
+      content:''; position:absolute; top:0; left:0; width:100%; height:2px;
+      background:var(--grad); transform:scaleX(0); transform-origin:left; transition:transform 0.4s ease;
     }
-
-    .section-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 300;
-      line-height: 1.1;
-      margin-bottom: 3rem;
+    .acard:hover { background:var(--bg3); }
+    .acard:hover::before { transform:scaleX(1); }
+    .acard-num {
+      font-family:'Syne',sans-serif; font-size:2.6rem; font-weight:800;
+      background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+      line-height:1; margin-bottom:0.5rem;
     }
+    .acard-label { font-size:0.7rem; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase; line-height:1.5; }
 
-    /* ── ABOUT ── */
-    .about {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6rem;
-      align-items: start;
-      border-top: 0.5px solid var(--border-soft);
-    }
-
-    .about-text p {
-      color: var(--text-muted);
-      font-weight: 300;
-      margin-bottom: 1.25rem;
-      font-size: 0.98rem;
-    }
-
-    .about-text p strong { color: var(--text); font-weight: 400; }
-
-    .about-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5px;
-      background: var(--border-soft);
-      border: 0.5px solid var(--border-soft);
-      margin-top: 0;
-    }
-
-    .stat-cell {
-      background: var(--bg2);
-      padding: 1.75rem;
-    }
-
-    .stat-num {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.8rem;
-      font-weight: 300;
-      color: var(--gold);
-      line-height: 1;
-      margin-bottom: 0.4rem;
-    }
-
-    .stat-label {
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-    }
-
-    /* ── EXPERIENCE ── */
-    .experience { border-top: 0.5px solid var(--border-soft); }
-
-    .exp-list { display: flex; flex-direction: column; gap: 0; }
-
+    .exp-section { border-top:1px solid var(--border); }
     .exp-item {
-      display: grid;
-      grid-template-columns: 200px 1fr;
-      gap: 3rem;
-      padding: 2.5rem 0;
-      border-bottom: 0.5px solid var(--border-soft);
-      transition: background 0.2s;
+      display:grid; grid-template-columns:220px 1fr; gap:4rem;
+      padding:3rem 0; border-bottom:1px solid var(--border); position:relative;
     }
-
-    .exp-item:hover { background: rgba(201,168,76,0.02); }
-
-    .exp-meta { padding-top: 0.1rem; }
-
-    .exp-date {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--gold-dim);
-      letter-spacing: 0.1em;
-      margin-bottom: 0.5rem;
+    .exp-item::after {
+      content:''; position:absolute; left:-4rem; top:0; bottom:0; width:2px;
+      background:var(--grad); transform:scaleY(0); transform-origin:top; transition:transform 0.5s ease;
     }
-
-    .exp-company {
-      font-size: 0.78rem;
-      color: var(--text-dim);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .exp-role {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.45rem;
-      font-weight: 400;
-      color: var(--text);
-      margin-bottom: 0.75rem;
-      line-height: 1.25;
-    }
-
-    .exp-desc {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      font-weight: 300;
-      line-height: 1.75;
-    }
-
-    .exp-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      margin-top: 1rem;
-    }
-
+    .exp-item:hover::after { transform:scaleY(1); }
+    .exp-date { font-family:'JetBrains Mono',monospace; font-size:0.67rem; color:var(--accent); letter-spacing:0.08em; margin-bottom:0.4rem; }
+    .exp-co { font-size:0.75rem; font-weight:500; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; }
+    .exp-num { font-family:'Syne',sans-serif; font-size:3rem; font-weight:800; color:var(--text-dim); line-height:1; margin-top:1rem; }
+    .exp-role { font-family:'Syne',sans-serif; font-size:1.55rem; font-weight:700; letter-spacing:-0.02em; color:var(--text); margin-bottom:1rem; line-height:1.2; }
+    .exp-desc { font-size:0.9rem; color:var(--text-muted); font-weight:300; line-height:1.8; margin-bottom:1.25rem; }
+    .exp-tags { display:flex; flex-wrap:wrap; gap:0.4rem; }
     .tag {
-      padding: 0.3rem 0.75rem;
-      border: 0.5px solid var(--border);
-      font-size: 0.67rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--gold-dim);
+      padding:0.25rem 0.65rem; background:var(--bg3); border:1px solid var(--border);
+      font-family:'JetBrains Mono',monospace; font-size:0.63rem; color:var(--text-muted);
+      letter-spacing:0.05em; border-radius:3px; transition:border-color 0.2s, color 0.2s;
     }
+    .tag:hover { border-color:var(--accent); color:var(--accent); }
 
-    /* ── SKILLS ── */
-    .skills { border-top: 0.5px solid var(--border-soft); }
-
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5px;
-      background: var(--border-soft);
-      border: 0.5px solid var(--border-soft);
+    .skills-section { border-top:1px solid var(--border); }
+    .skills-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); }
+    .sblock { background:var(--bg2); padding:2.5rem; position:relative; overflow:hidden; transition:background 0.3s; }
+    .sblock:hover { background:var(--bg3); }
+    .sblock-eye {
+      font-family:'JetBrains Mono',monospace; font-size:0.62rem; color:var(--accent);
+      letter-spacing:0.18em; text-transform:uppercase; margin-bottom:1.25rem;
+      display:flex; align-items:center; gap:0.5rem;
     }
-
-    .skill-cell {
-      background: var(--bg2);
-      padding: 2rem;
+    .sblock-eye::before { content:''; width:14px; height:1px; background:var(--accent); }
+    .sblock h3 { font-family:'Syne',sans-serif; font-size:1.15rem; font-weight:700; color:var(--text); margin-bottom:1.5rem; letter-spacing:-0.02em; }
+    .slist { list-style:none; }
+    .slist li {
+      display:flex; align-items:center; gap:0.6rem;
+      font-size:0.87rem; color:var(--text-muted); font-weight:300;
+      padding:0.45rem 0; border-bottom:1px solid var(--border); transition:color 0.2s;
     }
+    .slist li:last-child { border-bottom:none; }
+    .slist li:hover { color:var(--text); }
+    .slist li::before { content:'▸'; color:var(--accent); font-size:0.58rem; flex-shrink:0; }
 
-    .skill-cell-title {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1.25rem;
+    .contact-section { border-top:1px solid var(--border); }
+    .contact-inner { display:grid; grid-template-columns:1fr 1fr; gap:6rem; align-items:center; }
+    .ct-title {
+      font-family:'Syne',sans-serif; font-size:clamp(2.5rem,5.5vw,4.5rem); font-weight:800;
+      letter-spacing:-0.03em; line-height:1.0; margin-bottom:1.5rem;
     }
-
-    .skill-items { list-style: none; }
-
-    .skill-items li {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      font-weight: 300;
-      padding: 0.3rem 0;
-      border-bottom: 0.5px solid var(--border-soft);
+    .ct-title .grad { background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .ct-sub { color:var(--text-muted); font-size:0.95rem; font-weight:300; margin-bottom:2.5rem; line-height:1.8; }
+    .clinks { display:flex; flex-direction:column; }
+    .clink {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:1.25rem 0; border-bottom:1px solid var(--border);
+      text-decoration:none; color:var(--text); transition:color 0.2s, padding-left 0.3s;
     }
+    .clink:hover { color:var(--accent); padding-left:0.5rem; }
+    .clink-info { display:flex; flex-direction:column; gap:0.2rem; }
+    .clink-label { font-family:'JetBrains Mono',monospace; font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-muted); }
+    .clink-val { font-size:0.95rem; font-weight:500; }
+    .clink-arrow { font-size:1.1rem; color:var(--text-dim); transition:color 0.2s, transform 0.2s; }
+    .clink:hover .clink-arrow { color:var(--accent); transform:translate(4px,-4px); }
 
-    .skill-items li:last-child { border-bottom: none; }
-
-    /* ── CONTACT ── */
-    .contact {
-      border-top: 0.5px solid var(--border-soft);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6rem;
-      align-items: center;
-    }
-
-    .contact-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.5rem, 6vw, 4.5rem);
-      font-weight: 300;
-      line-height: 1.05;
-      margin-bottom: 1.5rem;
-    }
-
-    .contact-title em { font-style: italic; color: var(--gold-light); }
-
-    .contact-sub {
-      color: var(--text-muted);
-      font-weight: 300;
-      font-size: 0.95rem;
-      margin-bottom: 2.5rem;
-    }
-
-    .contact-links { display: flex; flex-direction: column; gap: 0; }
-
-    .contact-link {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.25rem 0;
-      border-bottom: 0.5px solid var(--border-soft);
-      text-decoration: none;
-      color: var(--text);
-      transition: color 0.2s;
-    }
-
-    .contact-link:hover { color: var(--gold); }
-
-    .contact-link-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      margin-bottom: 0.2rem;
-    }
-
-    .contact-link-val { font-size: 0.95rem; }
-
-    .contact-link-arrow {
-      font-size: 1.2rem;
-      color: var(--text-dim);
-      transition: color 0.2s, transform 0.2s;
-    }
-
-    .contact-link:hover .contact-link-arrow {
-      color: var(--gold);
-      transform: translateX(4px);
-    }
-
-    /* ── FOOTER ── */
     footer {
-      padding: 2rem 3rem;
-      border-top: 0.5px solid var(--border-soft);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      padding:2rem 4rem; border-top:1px solid var(--border);
+      display:flex; justify-content:space-between; align-items:center; position:relative; z-index:1;
     }
+    footer p { font-family:'JetBrains Mono',monospace; font-size:0.67rem; color:var(--text-muted); letter-spacing:0.08em; }
+    .f-status { display:flex; align-items:center; gap:0.5rem; font-family:'JetBrains Mono',monospace; font-size:0.67rem; color:var(--accent); }
+    .f-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); animation:blink 2s ease-in-out infinite; }
 
-    footer p {
-      font-size: 0.72rem;
-      letter-spacing: 0.1em;
-      color: var(--text-dim);
-    }
+    .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-l { opacity:0; transform:translateX(-20px); transition:opacity 0.7s ease, transform 0.7s ease; }
+    .reveal-l.visible { opacity:1; transform:translateX(0); }
 
-    .footer-domain {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--gold-dim);
-    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes expandWidth {
-      from { opacity: 0; width: 0; }
-      to   { opacity: 1; width: 60px; }
-    }
-
-    @keyframes scrollPulse {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 1; }
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 860px) {
-      nav { padding: 1rem 1.5rem; }
-      .nav-links { display: none; }
-      .hero { padding: 7rem 1.5rem 4rem; }
-      section { padding: 4rem 1.5rem; }
-      .about { grid-template-columns: 1fr; gap: 3rem; }
-      .about-stats { grid-template-columns: 1fr 1fr; }
-      .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
-      .exp-meta { display: flex; gap: 1rem; align-items: baseline; }
-      .skills-grid { grid-template-columns: 1fr; }
-      .contact { grid-template-columns: 1fr; gap: 3rem; }
-      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    @media(max-width:900px){
+      nav{padding:1rem 1.5rem} .nav-links{display:none}
+      section{padding:4rem 1.5rem} .hero{padding:7rem 1.5rem 4rem}
+      .about-wrap{grid-template-columns:1fr;gap:3rem}
+      .about-cards{grid-template-columns:1fr 1fr}
+      .exp-item{grid-template-columns:1fr;gap:0.75rem} .exp-num{display:none}
+      .skills-grid{grid-template-columns:1fr}
+      .contact-inner{grid-template-columns:1fr;gap:3rem}
+      .hero-stats{gap:2rem}
+      footer{flex-direction:column;gap:0.75rem;text-align:center;padding:2rem 1.5rem}
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <a href="#" class="nav-logo">Abdullah Siyadh</a>
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#experience">Experience</a></li>
-      <li><a href="#skills">Expertise</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-  </nav>
+<canvas id="particle-canvas"></canvas>
+<div class="grid-bg"></div>
 
-  <!-- HERO -->
-  <section class="hero" id="home">
-    <p class="hero-tag">Dubai, UAE &nbsp;·&nbsp; Open to Opportunities</p>
-    <h1 class="hero-name">
-      Abdullah<br /><em>Siyadh</em>
-    </h1>
-    <div class="hero-divider"></div>
-    <p class="hero-desc">
-      <strong>Automotive supply chain & data analytics professional</strong> with 4+ years driving sales operations, demand planning, and distribution intelligence across the UAE and MENA region.
-      I turn complex automotive data into decisions that move inventory, reduce variance, and sharpen dealer performance.
-    </p>
-    <div class="hero-cta">
-      <a href="#experience" class="btn-primary">View My Work</a>
-      <a href="#contact" class="btn-ghost">Get in Touch</a>
+<nav>
+  <a href="#" class="nav-logo">AS/</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero" id="home">
+  <div class="hero-badge"><div class="hero-badge-dot"></div>Available for new opportunities &nbsp;·&nbsp; Dubai, UAE</div>
+  <h1 class="hero-name">Abdullah<br /><span class="grad">Siyadh</span></h1>
+  <p class="hero-mono"><span class="c">// </span>Data Analyst &nbsp;·&nbsp; Supply Chain &nbsp;·&nbsp; Sales Operations<span class="c"> //</span></p>
+  <p class="hero-desc">I turn <strong>complex automotive data</strong> into decisions that move inventory, reduce variance, and sharpen dealer performance across UAE and MENA. 4+ years at the intersection of data and distribution.</p>
+  <div class="hero-cta">
+    <a href="#experience" class="btn-primary">View Experience →</a>
+    <a href="#contact" class="btn-ghost">Get in Touch</a>
+  </div>
+  <div class="hero-stats">
+    <div><div class="hstat-num">4+</div><div class="hstat-label">Years Experience</div></div>
+    <div><div class="hstat-num">16</div><div class="hstat-label">Branches Tracked</div></div>
+    <div><div class="hstat-num">3</div><div class="hstat-label">OEM Brands</div></div>
+    <div><div class="hstat-num">MENA</div><div class="hstat-label">Distribution Scope</div></div>
+  </div>
+</section>
+
+<section id="about">
+  <p class="sec-eye reveal">About</p>
+  <h2 class="sec-title reveal">Where data meets<br />the <span class="grad">supply chain.</span></h2>
+  <div class="about-wrap">
+    <div class="about-text reveal-l">
+      <p>I specialise in the intersection of <strong>sales analytics, S&OP, and distribution operations</strong> — built across four years in some of the most demanding automotive and logistics environments in the region.</p>
+      <p>From EWM-driven warehousing under <strong>Mitsubishi FUSO</strong> to fill rate analytics under <strong>Mercedes-Benz Trucks MEA</strong> at DHL, I've always worked where field complexity meets data.</p>
+      <p>At <strong>Al Habtoor Motors</strong>, I lead sales analytics across MMC, FUSO, and JAC — 16 branches, multi-brand KPI reporting, Python automation pipelines, and forecast modelling built from scratch.</p>
+      <br/>
+      <a href="#contact" class="btn-ghost" style="width:fit-content">Let's Connect →</a>
     </div>
-    <div class="hero-scroll">
-      <div class="scroll-line"></div>
-      <span>Scroll to explore</span>
+    <div class="about-cards reveal">
+      <div class="acard"><div class="acard-num">4+</div><div class="acard-label">Years in Automotive & Logistics</div></div>
+      <div class="acard"><div class="acard-num">16</div><div class="acard-label">UAE Branches Tracked</div></div>
+      <div class="acard"><div class="acard-num">3</div><div class="acard-label">OEM Brands Managed</div></div>
+      <div class="acard"><div class="acard-num">MENA</div><div class="acard-label">Distribution Scope</div></div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="about">
-      <div>
-        <p class="section-label">About Me</p>
-        <h2 class="section-title reveal">Where data meets<br />the automotive<br /><em style="font-style:italic;color:var(--gold-light)">supply chain.</em></h2>
-        <div class="about-text reveal">
-          <p>
-            I specialise in the intersection of <strong>sales analytics, S&OP, and distribution operations</strong> — built across four years in some of the most demanding automotive and logistics environments in the region.
-          </p>
-          <p>
-            From managing EWM-driven warehousing under <strong>Mitsubishi FUSO</strong> to analysing fill rates and distributor frameworks under <strong>Mercedes-Benz Trucks MEA</strong> at DHL, I have always operated at the edge where field complexity meets the spreadsheet.
-          </p>
-          <p>
-            Currently at <strong>Al Habtoor Motors</strong>, I lead sales performance analytics across MMC, FUSO, and JAC — covering 16 branches, multi-brand KPI reporting, and forecast modelling.
-          </p>
-        </div>
-      </div>
-      <div class="reveal">
-        <div class="about-stats">
-          <div class="stat-cell">
-            <div class="stat-num">4+</div>
-            <div class="stat-label">Years in Automotive<br />& Logistics</div>
-          </div>
-          <div class="stat-cell">
-            <div class="stat-num">16</div>
-            <div class="stat-label">Branches Tracked<br />Across UAE</div>
-          </div>
-          <div class="stat-cell">
-            <div class="stat-num">3</div>
-            <div class="stat-label">OEM Brands<br />Managed</div>
-          </div>
-          <div class="stat-cell">
-            <div class="stat-num">MENA</div>
-            <div class="stat-label">Distribution<br />Scope</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<section id="experience" class="exp-section">
+  <p class="sec-eye reveal">Career</p>
+  <h2 class="sec-title reveal">Experience</h2>
 
-  <!-- EXPERIENCE -->
-  <section id="experience" class="experience">
-    <p class="section-label">Career</p>
-    <h2 class="section-title reveal">Experience</h2>
-    <div class="exp-list">
-
-      <div class="exp-item reveal">
-        <div class="exp-meta">
-          <div class="exp-date">Nov 2025 — Present</div>
-          <div class="exp-company">Al Habtoor Motors</div>
-        </div>
-        <div>
-          <div class="exp-role">Data Analyst — Sales Operations</div>
-          <p class="exp-desc">
-            Sales performance tracking, variance analysis, and forecasting across MMC, FUSO, and JAC brands. Built Python automation pipelines (SAP Fiori exports, daily HTML→PDF forecast reports), standardised dealer reporting across 16 UAE branches, and drove multi-brand KPI transparency for senior management.
-          </p>
-          <div class="exp-tags">
-            <span class="tag">Python</span><span class="tag">Power BI</span>
-            <span class="tag">SAP</span><span class="tag">Selenium</span>
-            <span class="tag">Forecasting</span><span class="tag">Dealer KPIs</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="exp-item reveal">
-        <div class="exp-meta">
-          <div class="exp-date">Jul 2024 — Sep 2025</div>
-          <div class="exp-company">DHL Supply Chain</div>
-        </div>
-        <div>
-          <div class="exp-role">Business Analyst</div>
-          <p class="exp-desc">
-            Embedded within the Mercedes-Benz Trucks MEA account. Managed WIMS analytics, led cycle count programmes, improved fill rate visibility, and developed a distributor consultancy framework for commercial vehicle parts distribution across MENA and Africa.
-          </p>
-          <div class="exp-tags">
-            <span class="tag">WIMS</span><span class="tag">DMS</span>
-            <span class="tag">Fill Rate</span><span class="tag">Cycle Count</span>
-            <span class="tag">MENA Distribution</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="exp-item reveal">
-        <div class="exp-meta">
-          <div class="exp-date">Nov 2022 — Jun 2024</div>
-          <div class="exp-company">DSV Logistics</div>
-        </div>
-        <div>
-          <div class="exp-role">Supply Chain Analyst</div>
-          <p class="exp-desc">
-            Supported Mitsubishi FUSO parts and vehicle logistics operations. Delivered supply chain analytics, SAP/EWM warehouse management reporting, and KPI dashboards for inbound and outbound flows across the UAE distribution network.
-          </p>
-          <div class="exp-tags">
-            <span class="tag">SAP EWM</span><span class="tag">Excel</span>
-            <span class="tag">KPI Dashboards</span><span class="tag">Inventory</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="exp-item reveal">
-        <div class="exp-meta">
-          <div class="exp-date">Aug 2021 — Aug 2022</div>
-          <div class="exp-company">Nearoo</div>
-        </div>
-        <div>
-          <div class="exp-role">Logistics Operations</div>
-          <p class="exp-desc">
-            Set up e-commerce logistics KPI frameworks and inventory operations from the ground up. Built early reporting infrastructure for a fast-growing regional fulfilment operation.
-          </p>
-          <div class="exp-tags">
-            <span class="tag">E-commerce</span><span class="tag">KPIs</span>
-            <span class="tag">Inventory</span><span class="tag">Operations</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- SKILLS -->
-  <section id="skills" class="skills">
-    <p class="section-label">Expertise</p>
-    <h2 class="section-title reveal">What I bring<br /><em style="font-style:italic;color:var(--gold-light)">to the table.</em></h2>
-    <div class="skills-grid reveal">
-      <div class="skill-cell">
-        <p class="skill-cell-title">Analytics & BI</p>
-        <ul class="skill-items">
-          <li>Power BI / DAX</li>
-          <li>Qlik Sense</li>
-          <li>Advanced Excel</li>
-          <li>Python (pandas, Selenium, Playwright)</li>
-          <li>SQL / Snowflake</li>
-        </ul>
-      </div>
-      <div class="skill-cell">
-        <p class="skill-cell-title">Supply Chain & Operations</p>
-        <ul class="skill-items">
-          <li>S&OP / Demand Planning</li>
-          <li>SAP / EWM</li>
-          <li>Inventory Management</li>
-          <li>Dealer & Distributor KPIs</li>
-          <li>IMS & Forecast Accuracy</li>
-        </ul>
-      </div>
-      <div class="skill-cell">
-        <p class="skill-cell-title">Industry Domain</p>
-        <ul class="skill-items">
-          <li>Automotive OEM (MMC, FUSO, JAC, MB)</li>
-          <li>Commercial Vehicle Distribution</li>
-          <li>MENA / UAE Market</li>
-          <li>Aftersales Parts Logistics</li>
-          <li>Multi-branch Retail Operations</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact" class="contact">
+  <div class="exp-item reveal">
+    <div><div class="exp-date">Nov 2025 — Present</div><div class="exp-co">Al Habtoor Motors</div><div class="exp-num">01</div></div>
     <div>
-      <p class="section-label">Contact</p>
-      <h2 class="contact-title reveal">
-        Let's build<br />something<br /><em>together.</em>
-      </h2>
-      <p class="contact-sub reveal">
-        Open to roles in sales operations, demand planning, supply chain analytics, and data strategy — across automotive, FMCG, and distribution.
-      </p>
-      <a href="mailto:hello@abdullahsiyadh.com" class="btn-primary reveal" style="display:inline-block">
-        Send a Message
+      <div class="exp-role">Data Analyst — Sales Operations</div>
+      <p class="exp-desc">Sales performance tracking, variance analysis, and forecasting across MMC, FUSO, and JAC. Built end-to-end Python automation — SAP Fiori exports via Selenium, daily HTML→PDF forecast reports via Playwright — and standardised dealer reporting across 16 UAE branches.</p>
+      <div class="exp-tags"><span class="tag">Python</span><span class="tag">Power BI</span><span class="tag">SAP Fiori</span><span class="tag">Selenium</span><span class="tag">Playwright</span><span class="tag">Forecasting</span><span class="tag">Dealer KPIs</span></div>
+    </div>
+  </div>
+
+  <div class="exp-item reveal">
+    <div><div class="exp-date">Jul 2024 — Sep 2025</div><div class="exp-co">DHL Supply Chain</div><div class="exp-num">02</div></div>
+    <div>
+      <div class="exp-role">Business Analyst</div>
+      <p class="exp-desc">Embedded within the Mercedes-Benz Trucks MEA account. Managed WIMS analytics, led cycle count programmes, improved fill rate visibility, and developed a distributor consultancy framework for commercial vehicle parts across MENA and Africa.</p>
+      <div class="exp-tags"><span class="tag">WIMS</span><span class="tag">DMS</span><span class="tag">Fill Rate</span><span class="tag">Cycle Count</span><span class="tag">MENA Distribution</span></div>
+    </div>
+  </div>
+
+  <div class="exp-item reveal">
+    <div><div class="exp-date">Nov 2022 — Jun 2024</div><div class="exp-co">DSV Logistics</div><div class="exp-num">03</div></div>
+    <div>
+      <div class="exp-role">Supply Chain Analyst</div>
+      <p class="exp-desc">Supported Mitsubishi FUSO parts and vehicle logistics. Delivered SAP/EWM warehouse reporting and KPI dashboards for inbound and outbound flows across the UAE distribution network.</p>
+      <div class="exp-tags"><span class="tag">SAP EWM</span><span class="tag">Inventory</span><span class="tag">KPI Dashboards</span><span class="tag">Advanced Excel</span></div>
+    </div>
+  </div>
+
+  <div class="exp-item reveal">
+    <div><div class="exp-date">Aug 2021 — Aug 2022</div><div class="exp-co">Nearoo</div><div class="exp-num">04</div></div>
+    <div>
+      <div class="exp-role">Logistics Operations</div>
+      <p class="exp-desc">Built e-commerce logistics KPI frameworks and inventory operations from scratch for a fast-growing regional fulfilment startup.</p>
+      <div class="exp-tags"><span class="tag">E-commerce</span><span class="tag">KPIs</span><span class="tag">Inventory</span><span class="tag">Operations</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="skills" class="skills-section">
+  <p class="sec-eye reveal">Expertise</p>
+  <h2 class="sec-title reveal">What I <span class="grad">bring.</span></h2>
+  <div class="skills-grid reveal">
+    <div class="sblock">
+      <div class="sblock-eye">Analytics & BI</div>
+      <h3>Data & Reporting</h3>
+      <ul class="slist">
+        <li>Power BI / DAX</li><li>Qlik Sense</li><li>Advanced Excel & VBA</li>
+        <li>Python — pandas, Selenium, Playwright</li><li>SQL / Snowflake</li>
+      </ul>
+    </div>
+    <div class="sblock">
+      <div class="sblock-eye">Operations</div>
+      <h3>Supply Chain & S&OP</h3>
+      <ul class="slist">
+        <li>Demand Planning & Forecasting</li><li>SAP / EWM</li><li>Inventory Management</li>
+        <li>IMS & Forecast Accuracy</li><li>Dealer & Distributor KPIs</li>
+      </ul>
+    </div>
+    <div class="sblock">
+      <div class="sblock-eye">Domain</div>
+      <h3>Industry Knowledge</h3>
+      <ul class="slist">
+        <li>Automotive OEM — MMC, FUSO, JAC, MB</li><li>Commercial Vehicle Distribution</li>
+        <li>UAE & MENA Market</li><li>Aftersales Parts Logistics</li><li>Multi-branch Retail Operations</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact-section">
+  <div class="contact-inner">
+    <div>
+      <p class="sec-eye reveal">Contact</p>
+      <h2 class="ct-title reveal">Let's build<br />something<br /><span class="grad">together.</span></h2>
+      <p class="ct-sub reveal">Open to roles in sales operations, demand planning, supply chain analytics, and data strategy across automotive, FMCG, and distribution.</p>
+      <a href="mailto:hello@abdullahsiyadh.com" class="btn-primary reveal" style="width:fit-content">Send a Message →</a>
+    </div>
+    <div class="clinks reveal">
+      <a href="mailto:hello@abdullahsiyadh.com" class="clink">
+        <div class="clink-info"><span class="clink-label">Email</span><span class="clink-val">hello@abdullahsiyadh.com</span></div>
+        <span class="clink-arrow">↗</span>
+      </a>
+      <a href="https://linkedin.com/in/abdullahsiyadh" target="_blank" class="clink">
+        <div class="clink-info"><span class="clink-label">LinkedIn</span><span class="clink-val">linkedin.com/in/abdullahsiyadh</span></div>
+        <span class="clink-arrow">↗</span>
+      </a>
+      <a href="https://abdullahsiyadh.com" class="clink">
+        <div class="clink-info"><span class="clink-label">Website</span><span class="clink-val">abdullahsiyadh.com</span></div>
+        <span class="clink-arrow">↗</span>
       </a>
     </div>
-    <div class="contact-links reveal">
-      <a href="mailto:hello@abdullahsiyadh.com" class="contact-link">
-        <div>
-          <div class="contact-link-label">Email</div>
-          <div class="contact-link-val">hello@abdullahsiyadh.com</div>
-        </div>
-        <span class="contact-link-arrow">→</span>
-      </a>
-      <a href="https://linkedin.com/in/abdullahsiyadh" target="_blank" class="contact-link">
-        <div>
-          <div class="contact-link-label">LinkedIn</div>
-          <div class="contact-link-val">linkedin.com/in/abdullahsiyadh</div>
-        </div>
-        <span class="contact-link-arrow">→</span>
-      </a>
-      <a href="https://abdullahsiyadh.com" class="contact-link">
-        <div>
-          <div class="contact-link-label">Website</div>
-          <div class="contact-link-val">abdullahsiyadh.com</div>
-        </div>
-        <span class="contact-link-arrow">→</span>
-      </a>
-    </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FOOTER -->
-  <footer>
-    <p>© 2026 Abdullah Siyadh. All rights reserved.</p>
-    <p class="footer-domain">abdullahsiyadh.com</p>
-  </footer>
+<footer>
+  <p>© 2026 Abdullah Siyadh</p>
+  <div class="f-status"><div class="f-dot"></div>Open to opportunities</div>
+</footer>
 
-  <script>
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          observer.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12 });
+<script>
+const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [], mouse = {x:-9999,y:-9999};
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-  </script>
+function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
 
+function mkParticles(){
+  particles = [];
+  const n = Math.floor(W * H / 13000);
+  for(let i=0;i<n;i++){
+    particles.push({
+      x: Math.random()*W, y: Math.random()*H,
+      r: 0.8 + Math.random()*1.6,
+      vx: (Math.random()-0.5)*0.2, vy: (Math.random()-0.5)*0.2,
+      op: 0.2 + Math.random()*0.55,
+      col: Math.random()>0.55 ? '#00F5A0' : Math.random()>0.5 ? '#00B4FF' : '#ffffff'
+    });
+  }
+}
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  for(let i=0;i<particles.length;i++){
+    const p = particles[i];
+    p.x += p.vx; p.y += p.vy;
+    if(p.x<0) p.x=W; if(p.x>W) p.x=0;
+    if(p.y<0) p.y=H; if(p.y>H) p.y=0;
+    const dx=p.x-mouse.x, dy=p.y-mouse.y, d=Math.sqrt(dx*dx+dy*dy);
+    if(d<130){ p.x+=dx/d*0.9; p.y+=dy/d*0.9; }
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.col; ctx.globalAlpha=p.op; ctx.fill();
+    for(let j=i+1;j<particles.length;j++){
+      const q=particles[j];
+      const ex=p.x-q.x, ey=p.y-q.y, ed=Math.sqrt(ex*ex+ey*ey);
+      if(ed<95){
+        ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y);
+        ctx.strokeStyle='#00F5A0'; ctx.globalAlpha=(1-ed/95)*0.07;
+        ctx.lineWidth=0.5; ctx.stroke();
+      }
+    }
+    ctx.globalAlpha=1;
+  }
+  requestAnimationFrame(draw);
+}
+
+window.addEventListener('mousemove',e=>{ mouse.x=e.clientX; mouse.y=e.clientY; });
+window.addEventListener('resize',()=>{ resize(); mkParticles(); });
+resize(); mkParticles(); draw();
+
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
+},{threshold:0.1});
+document.querySelectorAll('.reveal,.reveal-l').forEach(el=>obs.observe(el));
+</script>
 </body>
 </html>
