@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abdullah Siyadh — Automotive Supply Chain & Data Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E8C97A;
+      --gold-dim: #7A6029;
+      --bg: #0A0A08;
+      --bg2: #111110;
+      --bg3: #1A1A17;
+      --border: rgba(201,168,76,0.18);
+      --border-soft: rgba(255,255,255,0.06);
+      --text: #F0EDE4;
+      --text-muted: #8A8880;
+      --text-dim: #4A4A46;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 3rem;
+      border-bottom: 0.5px solid var(--border);
+      background: rgba(10,10,8,0.85);
+      backdrop-filter: blur(16px);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 3rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.2s forwards;
+    }
+
+    .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 9vw, 7.5rem);
+      font-weight: 300;
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.4s forwards;
+    }
+
+    .hero-name em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .hero-divider {
+      width: 60px;
+      height: 1px;
+      background: var(--gold);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: expandWidth 0.8s ease 0.6s forwards;
+    }
+
+    .hero-desc {
+      max-width: 520px;
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.8;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.8s forwards;
+    }
+
+    .hero-desc strong {
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      margin-top: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 1s forwards;
+    }
+
+    .btn-primary {
+      padding: 0.85rem 2rem;
+      background: var(--gold);
+      color: #0A0A08;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+    .btn-ghost {
+      padding: 0.85rem 2rem;
+      border: 0.5px solid var(--border);
+      color: var(--text-muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 1.2s forwards;
+    }
+
+    .hero-scroll span {
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .scroll-line {
+      width: 40px;
+      height: 0.5px;
+      background: var(--text-dim);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* ── SECTION COMMONS ── */
+    section {
+      padding: 6rem 3rem;
+      position: relative;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 3rem;
+    }
+
+    /* ── ABOUT ── */
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: start;
+      border-top: 0.5px solid var(--border-soft);
+    }
+
+    .about-text p {
+      color: var(--text-muted);
+      font-weight: 300;
+      margin-bottom: 1.25rem;
+      font-size: 0.98rem;
+    }
+
+    .about-text p strong { color: var(--text); font-weight: 400; }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5px;
+      background: var(--border-soft);
+      border: 0.5px solid var(--border-soft);
+      margin-top: 0;
+    }
+
+    .stat-cell {
+      background: var(--bg2);
+      padding: 1.75rem;
+    }
+
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    /* ── EXPERIENCE ── */
+    .experience { border-top: 0.5px solid var(--border-soft); }
+
+    .exp-list { display: flex; flex-direction: column; gap: 0; }
+
+    .exp-item {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 3rem;
+      padding: 2.5rem 0;
+      border-bottom: 0.5px solid var(--border-soft);
+      transition: background 0.2s;
+    }
+
+    .exp-item:hover { background: rgba(201,168,76,0.02); }
+
+    .exp-meta { padding-top: 0.1rem; }
+
+    .exp-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--gold-dim);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .exp-company {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .exp-role {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      line-height: 1.25;
+    }
+
+    .exp-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 300;
+      line-height: 1.75;
+    }
+
+    .exp-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 1rem;
+    }
+
+    .tag {
+      padding: 0.3rem 0.75rem;
+      border: 0.5px solid var(--border);
+      font-size: 0.67rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+    }
+
+    /* ── SKILLS ── */
+    .skills { border-top: 0.5px solid var(--border-soft); }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+      background: var(--border-soft);
+      border: 0.5px solid var(--border-soft);
+    }
+
+    .skill-cell {
+      background: var(--bg2);
+      padding: 2rem;
+    }
+
+    .skill-cell-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.25rem;
+    }
+
+    .skill-items { list-style: none; }
+
+    .skill-items li {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-weight: 300;
+      padding: 0.3rem 0;
+      border-bottom: 0.5px solid var(--border-soft);
+    }
+
+    .skill-items li:last-child { border-bottom: none; }
+
+    /* ── CONTACT ── */
+    .contact {
+      border-top: 0.5px solid var(--border-soft);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+
+    .contact-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-title em { font-style: italic; color: var(--gold-light); }
+
+    .contact-sub {
+      color: var(--text-muted);
+      font-weight: 300;
+      font-size: 0.95rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .contact-links { display: flex; flex-direction: column; gap: 0; }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 0;
+      border-bottom: 0.5px solid var(--border-soft);
+      text-decoration: none;
+      color: var(--text);
+      transition: color 0.2s;
+    }
+
+    .contact-link:hover { color: var(--gold); }
+
+    .contact-link-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 0.2rem;
+    }
+
+    .contact-link-val { font-size: 0.95rem; }
+
+    .contact-link-arrow {
+      font-size: 1.2rem;
+      color: var(--text-dim);
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .contact-link:hover .contact-link-arrow {
+      color: var(--gold);
+      transform: translateX(4px);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem 3rem;
+      border-top: 0.5px solid var(--border-soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer p {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+    }
+
+    .footer-domain {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--gold-dim);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes expandWidth {
+      from { opacity: 0; width: 0; }
+      to   { opacity: 1; width: 60px; }
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { padding: 7rem 1.5rem 4rem; }
+      section { padding: 4rem 1.5rem; }
+      .about { grid-template-columns: 1fr; gap: 3rem; }
+      .about-stats { grid-template-columns: 1fr 1fr; }
+      .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
+      .exp-meta { display: flex; gap: 1rem; align-items: baseline; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .contact { grid-template-columns: 1fr; gap: 3rem; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">Abdullah Siyadh</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Expertise</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <p class="hero-tag">Dubai, UAE &nbsp;·&nbsp; Open to Opportunities</p>
+    <h1 class="hero-name">
+      Abdullah<br /><em>Siyadh</em>
+    </h1>
+    <div class="hero-divider"></div>
+    <p class="hero-desc">
+      <strong>Automotive supply chain & data analytics professional</strong> with 4+ years driving sales operations, demand planning, and distribution intelligence across the UAE and MENA region.
+      I turn complex automotive data into decisions that move inventory, reduce variance, and sharpen dealer performance.
+    </p>
+    <div class="hero-cta">
+      <a href="#experience" class="btn-primary">View My Work</a>
+      <a href="#contact" class="btn-ghost">Get in Touch</a>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span>Scroll to explore</span>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about">
+      <div>
+        <p class="section-label">About Me</p>
+        <h2 class="section-title reveal">Where data meets<br />the automotive<br /><em style="font-style:italic;color:var(--gold-light)">supply chain.</em></h2>
+        <div class="about-text reveal">
+          <p>
+            I specialise in the intersection of <strong>sales analytics, S&OP, and distribution operations</strong> — built across four years in some of the most demanding automotive and logistics environments in the region.
+          </p>
+          <p>
+            From managing EWM-driven warehousing under <strong>Mitsubishi FUSO</strong> to analysing fill rates and distributor frameworks under <strong>Mercedes-Benz Trucks MEA</strong> at DHL, I have always operated at the edge where field complexity meets the spreadsheet.
+          </p>
+          <p>
+            Currently at <strong>Al Habtoor Motors</strong>, I lead sales performance analytics across MMC, FUSO, and JAC — covering 16 branches, multi-brand KPI reporting, and forecast modelling.
+          </p>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="about-stats">
+          <div class="stat-cell">
+            <div class="stat-num">4+</div>
+            <div class="stat-label">Years in Automotive<br />& Logistics</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">16</div>
+            <div class="stat-label">Branches Tracked<br />Across UAE</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">3</div>
+            <div class="stat-label">OEM Brands<br />Managed</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-num">MENA</div>
+            <div class="stat-label">Distribution<br />Scope</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience" class="experience">
+    <p class="section-label">Career</p>
+    <h2 class="section-title reveal">Experience</h2>
+    <div class="exp-list">
+
+      <div class="exp-item reveal">
+        <div class="exp-meta">
+          <div class="exp-date">Nov 2025 — Present</div>
+          <div class="exp-company">Al Habtoor Motors</div>
+        </div>
+        <div>
+          <div class="exp-role">Data Analyst — Sales Operations</div>
+          <p class="exp-desc">
+            Sales performance tracking, variance analysis, and forecasting across MMC, FUSO, and JAC brands. Built Python automation pipelines (SAP Fiori exports, daily HTML→PDF forecast reports), standardised dealer reporting across 16 UAE branches, and drove multi-brand KPI transparency for senior management.
+          </p>
+          <div class="exp-tags">
+            <span class="tag">Python</span><span class="tag">Power BI</span>
+            <span class="tag">SAP</span><span class="tag">Selenium</span>
+            <span class="tag">Forecasting</span><span class="tag">Dealer KPIs</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-meta">
+          <div class="exp-date">Jul 2024 — Sep 2025</div>
+          <div class="exp-company">DHL Supply Chain</div>
+        </div>
+        <div>
+          <div class="exp-role">Business Analyst</div>
+          <p class="exp-desc">
+            Embedded within the Mercedes-Benz Trucks MEA account. Managed WIMS analytics, led cycle count programmes, improved fill rate visibility, and developed a distributor consultancy framework for commercial vehicle parts distribution across MENA and Africa.
+          </p>
+          <div class="exp-tags">
+            <span class="tag">WIMS</span><span class="tag">DMS</span>
+            <span class="tag">Fill Rate</span><span class="tag">Cycle Count</span>
+            <span class="tag">MENA Distribution</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-meta">
+          <div class="exp-date">Nov 2022 — Jun 2024</div>
+          <div class="exp-company">DSV Logistics</div>
+        </div>
+        <div>
+          <div class="exp-role">Supply Chain Analyst</div>
+          <p class="exp-desc">
+            Supported Mitsubishi FUSO parts and vehicle logistics operations. Delivered supply chain analytics, SAP/EWM warehouse management reporting, and KPI dashboards for inbound and outbound flows across the UAE distribution network.
+          </p>
+          <div class="exp-tags">
+            <span class="tag">SAP EWM</span><span class="tag">Excel</span>
+            <span class="tag">KPI Dashboards</span><span class="tag">Inventory</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-meta">
+          <div class="exp-date">Aug 2021 — Aug 2022</div>
+          <div class="exp-company">Nearoo</div>
+        </div>
+        <div>
+          <div class="exp-role">Logistics Operations</div>
+          <p class="exp-desc">
+            Set up e-commerce logistics KPI frameworks and inventory operations from the ground up. Built early reporting infrastructure for a fast-growing regional fulfilment operation.
+          </p>
+          <div class="exp-tags">
+            <span class="tag">E-commerce</span><span class="tag">KPIs</span>
+            <span class="tag">Inventory</span><span class="tag">Operations</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="skills">
+    <p class="section-label">Expertise</p>
+    <h2 class="section-title reveal">What I bring<br /><em style="font-style:italic;color:var(--gold-light)">to the table.</em></h2>
+    <div class="skills-grid reveal">
+      <div class="skill-cell">
+        <p class="skill-cell-title">Analytics & BI</p>
+        <ul class="skill-items">
+          <li>Power BI / DAX</li>
+          <li>Qlik Sense</li>
+          <li>Advanced Excel</li>
+          <li>Python (pandas, Selenium, Playwright)</li>
+          <li>SQL / Snowflake</li>
+        </ul>
+      </div>
+      <div class="skill-cell">
+        <p class="skill-cell-title">Supply Chain & Operations</p>
+        <ul class="skill-items">
+          <li>S&OP / Demand Planning</li>
+          <li>SAP / EWM</li>
+          <li>Inventory Management</li>
+          <li>Dealer & Distributor KPIs</li>
+          <li>IMS & Forecast Accuracy</li>
+        </ul>
+      </div>
+      <div class="skill-cell">
+        <p class="skill-cell-title">Industry Domain</p>
+        <ul class="skill-items">
+          <li>Automotive OEM (MMC, FUSO, JAC, MB)</li>
+          <li>Commercial Vehicle Distribution</li>
+          <li>MENA / UAE Market</li>
+          <li>Aftersales Parts Logistics</li>
+          <li>Multi-branch Retail Operations</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact">
+    <div>
+      <p class="section-label">Contact</p>
+      <h2 class="contact-title reveal">
+        Let's build<br />something<br /><em>together.</em>
+      </h2>
+      <p class="contact-sub reveal">
+        Open to roles in sales operations, demand planning, supply chain analytics, and data strategy — across automotive, FMCG, and distribution.
+      </p>
+      <a href="mailto:hello@abdullahsiyadh.com" class="btn-primary reveal" style="display:inline-block">
+        Send a Message
+      </a>
+    </div>
+    <div class="contact-links reveal">
+      <a href="mailto:hello@abdullahsiyadh.com" class="contact-link">
+        <div>
+          <div class="contact-link-label">Email</div>
+          <div class="contact-link-val">hello@abdullahsiyadh.com</div>
+        </div>
+        <span class="contact-link-arrow">→</span>
+      </a>
+      <a href="https://linkedin.com/in/abdullahsiyadh" target="_blank" class="contact-link">
+        <div>
+          <div class="contact-link-label">LinkedIn</div>
+          <div class="contact-link-val">linkedin.com/in/abdullahsiyadh</div>
+        </div>
+        <span class="contact-link-arrow">→</span>
+      </a>
+      <a href="https://abdullahsiyadh.com" class="contact-link">
+        <div>
+          <div class="contact-link-label">Website</div>
+          <div class="contact-link-val">abdullahsiyadh.com</div>
+        </div>
+        <span class="contact-link-arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 Abdullah Siyadh. All rights reserved.</p>
+    <p class="footer-domain">abdullahsiyadh.com</p>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
