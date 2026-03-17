@@ -1,363 +1,571 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Abdullah Siyadh — Data & Supply Chain</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #050508;
-      --bg2: #0C0C12;
-      --bg3: #12121A;
-      --accent: #00F5A0;
-      --accent2: #00B4FF;
-      --accent-dim: rgba(0,245,160,0.12);
-      --border: rgba(255,255,255,0.06);
-      --border-accent: rgba(0,245,160,0.3);
-      --text: #F0F0F8;
-      --text-muted: #6B6B80;
-      --text-dim: #1E1E2A;
-      --grad: linear-gradient(135deg, #00F5A0, #00B4FF);
-    }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; overflow-x: hidden; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Abdullah Siyadh — Data & Supply Chain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#030305;--bg2:#07070D;--bg3:#0D0D18;
+  --red:#E8002D;--red2:#FF1E00;--red-dim:rgba(232,0,45,0.15);
+  --amber:#F5A623;--teal:#00D2BE;
+  --border:rgba(255,255,255,0.06);--border-red:rgba(232,0,45,0.3);
+  --text:#F0EEF8;--text-muted:#6A6880;--text-dim:#1A1A28;
+  --grad:linear-gradient(90deg,#E8002D,#F5A623);
+  --grad2:linear-gradient(90deg,#00D2BE,#E8002D);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
 
-    #particle-canvas { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
+/* LOADER */
+#loader{
+  position:fixed;inset:0;z-index:999;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;
+  transition:opacity 0.6s ease;
+}
+#loader.gone{opacity:0;pointer-events:none}
+.loader-name{
+  font-family:'Orbitron',monospace;font-size:clamp(1.5rem,4vw,2.5rem);font-weight:900;
+  letter-spacing:0.2em;color:var(--text);
+  clip-path:inset(0 100% 0 0);animation:revealText 0.8s ease 0.5s forwards;
+}
+.loader-name span{color:var(--red)}
+.loader-bar-wrap{width:280px;height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}
+.loader-bar{height:100%;background:var(--grad);width:0;animation:loadBar 2s ease 0.3s forwards;border-radius:2px}
+.loader-status{font-family:'Share Tech Mono',monospace;font-size:0.68rem;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase}
+.loader-status span{color:var(--teal)}
 
-    .grid-bg {
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background-image: linear-gradient(rgba(255,255,255,0.016) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.016) 1px, transparent 1px);
-      background-size: 64px 64px;
-    }
+/* SCANLINES */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);
+}
 
-    nav {
-      position: fixed; top:0; left:0; right:0; z-index:100;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1.25rem 4rem;
-      background: rgba(5,5,8,0.85); backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-logo {
-      font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800;
-      background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-      text-decoration: none;
-    }
-    .nav-links { display:flex; gap:2.5rem; list-style:none; }
-    .nav-links a {
-      font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--text-muted); text-decoration: none; transition: color 0.2s; position: relative;
-    }
-    .nav-links a::after { content:''; position:absolute; bottom:-4px; left:0; width:0; height:1px; background:var(--accent); transition:width 0.3s; }
-    .nav-links a:hover { color: var(--accent); }
-    .nav-links a:hover::after { width:100%; }
+/* CANVAS */
+#track-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.35}
 
-    .hero {
-      min-height: 100vh; display:flex; flex-direction:column; justify-content:center;
-      padding: 8rem 4rem 4rem; position:relative; z-index:1;
-    }
-    .hero-badge {
-      display:inline-flex; align-items:center; gap:0.6rem;
-      padding: 0.4rem 1rem; border:1px solid var(--border-accent); background: var(--accent-dim);
-      border-radius: 100px; font-family:'JetBrains Mono',monospace; font-size:0.68rem;
-      color: var(--accent); letter-spacing:0.08em; margin-bottom:2.5rem; width:fit-content;
-      opacity:0; animation: fadeUp 0.6s ease 0.2s forwards;
-    }
-    .hero-badge-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); animation: blink 2s ease-in-out infinite; }
-    .hero-name {
-      font-family:'Syne',sans-serif; font-size:clamp(3.5rem,9vw,8rem); font-weight:800;
-      line-height:0.9; letter-spacing:-0.03em; margin-bottom:1.5rem;
-      opacity:0; animation: fadeUp 0.7s ease 0.4s forwards;
-    }
-    .hero-name .grad { background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-    .hero-mono {
-      font-family:'JetBrains Mono',monospace; font-size:0.88rem; color:var(--text-muted);
-      margin-bottom:2rem; opacity:0; animation: fadeUp 0.7s ease 0.6s forwards;
-    }
-    .hero-mono .c { color: var(--accent2); }
-    .hero-desc {
-      max-width:560px; font-size:1.02rem; font-weight:300; color:var(--text-muted); line-height:1.85; margin-bottom:3rem;
-      opacity:0; animation: fadeUp 0.7s ease 0.8s forwards;
-    }
-    .hero-desc strong { color:var(--text); font-weight:500; }
-    .hero-cta { display:flex; gap:1rem; flex-wrap:wrap; opacity:0; animation: fadeUp 0.7s ease 1s forwards; }
+/* CORNER BRACKETS */
+.bracket{position:relative}
+.bracket::before,.bracket::after{
+  content:'';position:absolute;width:16px;height:16px;
+}
+.bracket::before{top:0;left:0;border-top:2px solid var(--red);border-left:2px solid var(--red)}
+.bracket::after{bottom:0;right:0;border-bottom:2px solid var(--red);border-right:2px solid var(--red)}
 
-    .btn-primary {
-      display:inline-flex; align-items:center; gap:0.4rem;
-      padding: 0.85rem 1.8rem; background:var(--grad); color:#050508;
-      font-family:'Space Grotesk',sans-serif; font-size:0.8rem; font-weight:600;
-      letter-spacing:0.07em; text-transform:uppercase; text-decoration:none; border-radius:4px;
-      transition: opacity 0.2s, transform 0.15s;
-    }
-    .btn-primary:hover { opacity:0.85; transform:translateY(-2px); }
-    .btn-ghost {
-      display:inline-flex; align-items:center; gap:0.4rem;
-      padding: 0.85rem 1.8rem; border:1px solid var(--border-accent); color:var(--accent);
-      font-family:'Space Grotesk',sans-serif; font-size:0.8rem; font-weight:500;
-      letter-spacing:0.07em; text-transform:uppercase; text-decoration:none; border-radius:4px;
-      transition: background 0.2s, transform 0.15s;
-    }
-    .btn-ghost:hover { background: var(--accent-dim); transform:translateY(-2px); }
+/* ── FIXED HUD ── */
+#hud{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(3,3,5,0.96);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+}
 
-    .hero-stats {
-      display:flex; gap:3.5rem; margin-top:5rem; padding-top:3rem;
-      border-top:1px solid var(--border);
-      opacity:0; animation: fadeUp 0.7s ease 1.2s forwards;
-    }
-    .hstat-num {
-      font-family:'Syne',sans-serif; font-size:2.2rem; font-weight:800;
-      background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-      line-height:1; margin-bottom:0.3rem;
-    }
-    .hstat-label { font-size:0.7rem; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase; }
+/* top nav strip */
+.hud-nav{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0.75rem 3rem;border-bottom:1px solid var(--border);
+}
+.nav-logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+.nav-logo-mark{
+  width:28px;height:28px;background:var(--red);
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',monospace;font-size:0.5rem;font-weight:900;color:#fff;
+}
+.nav-logo-text{font-family:'Orbitron',monospace;font-size:0.72rem;font-weight:700;color:var(--text);letter-spacing:0.15em}
+.nav-logo-text span{color:var(--red)}
+.nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
+.nav-links a{font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+.nav-links a:hover{color:var(--red)}
+.nav-lap{font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:var(--teal);letter-spacing:0.1em;display:flex;align-items:center;gap:0.5rem}
+.nav-lap::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--teal);animation:blink 1.5s ease-in-out infinite}
 
-    section { padding:7rem 4rem; position:relative; z-index:1; }
-    .sec-eye {
-      font-family:'JetBrains Mono',monospace; font-size:0.65rem; letter-spacing:0.22em;
-      text-transform:uppercase; color:var(--accent); margin-bottom:0.75rem;
-      display:flex; align-items:center; gap:0.75rem;
-    }
-    .sec-eye::before { content:''; width:22px; height:1px; background:var(--accent); }
-    .sec-title {
-      font-family:'Syne',sans-serif; font-size:clamp(2rem,4.5vw,3.5rem); font-weight:800;
-      letter-spacing:-0.03em; line-height:1.05; margin-bottom:4rem;
-    }
-    .sec-title .grad { background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+/* HUD dashboard strip */
+.hud-dash{
+  display:grid;
+  grid-template-columns:280px 1fr 120px;
+  align-items:center;
+  gap:2rem;
+  padding:0.9rem 3rem;
+}
 
-    .about-wrap { display:grid; grid-template-columns:1.1fr 0.9fr; gap:5rem; align-items:start; border-top:1px solid var(--border); padding-top:4rem; }
-    .about-text p { color:var(--text-muted); font-weight:300; font-size:0.97rem; margin-bottom:1.25rem; line-height:1.85; }
-    .about-text p strong { color:var(--text); font-weight:500; }
-    .about-cards { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); }
-    .acard {
-      background:var(--bg2); padding:2rem 1.75rem; position:relative; overflow:hidden; transition:background 0.3s;
-    }
-    .acard::before {
-      content:''; position:absolute; top:0; left:0; width:100%; height:2px;
-      background:var(--grad); transform:scaleX(0); transform-origin:left; transition:transform 0.4s ease;
-    }
-    .acard:hover { background:var(--bg3); }
-    .acard:hover::before { transform:scaleX(1); }
-    .acard-num {
-      font-family:'Syne',sans-serif; font-size:2.6rem; font-weight:800;
-      background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-      line-height:1; margin-bottom:0.5rem;
-    }
-    .acard-label { font-size:0.7rem; color:var(--text-muted); letter-spacing:0.1em; text-transform:uppercase; line-height:1.5; }
+/* driver card */
+.hud-driver{display:flex;flex-direction:column;gap:0.1rem}
+.hud-driver-name{
+  font-family:'Orbitron',monospace;font-size:1.1rem;font-weight:900;
+  color:var(--text);letter-spacing:-0.01em;line-height:1;
+}
+.hud-driver-name span{color:var(--red)}
+.hud-driver-role{
+  font-family:'Share Tech Mono',monospace;font-size:0.58rem;
+  color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase;
+}
 
-    .exp-section { border-top:1px solid var(--border); }
-    .exp-item {
-      display:grid; grid-template-columns:220px 1fr; gap:4rem;
-      padding:3rem 0; border-bottom:1px solid var(--border); position:relative;
-    }
-    .exp-item::after {
-      content:''; position:absolute; left:-4rem; top:0; bottom:0; width:2px;
-      background:var(--grad); transform:scaleY(0); transform-origin:top; transition:transform 0.5s ease;
-    }
-    .exp-item:hover::after { transform:scaleY(1); }
-    .exp-date { font-family:'JetBrains Mono',monospace; font-size:0.67rem; color:var(--accent); letter-spacing:0.08em; margin-bottom:0.4rem; }
-    .exp-co { font-size:0.75rem; font-weight:500; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em; }
-    .exp-num { font-family:'Syne',sans-serif; font-size:3rem; font-weight:800; color:var(--text-dim); line-height:1; margin-top:1rem; }
-    .exp-role { font-family:'Syne',sans-serif; font-size:1.55rem; font-weight:700; letter-spacing:-0.02em; color:var(--text); margin-bottom:1rem; line-height:1.2; }
-    .exp-desc { font-size:0.9rem; color:var(--text-muted); font-weight:300; line-height:1.8; margin-bottom:1.25rem; }
-    .exp-tags { display:flex; flex-wrap:wrap; gap:0.4rem; }
-    .tag {
-      padding:0.25rem 0.65rem; background:var(--bg3); border:1px solid var(--border);
-      font-family:'JetBrains Mono',monospace; font-size:0.63rem; color:var(--text-muted);
-      letter-spacing:0.05em; border-radius:3px; transition:border-color 0.2s, color 0.2s;
-    }
-    .tag:hover { border-color:var(--accent); color:var(--accent); }
+/* rpm meter inside HUD */
+.hud-rpm{display:flex;flex-direction:column;gap:4px;width:100%}
+.hud-rpm-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
+.hud-rpm-num{
+  font-family:'Orbitron',monospace;font-size:1.6rem;font-weight:900;
+  color:var(--text);letter-spacing:-0.02em;line-height:1;transition:color 0.12s;
+}
+.hud-rpm-num.redline{color:var(--red);text-shadow:0 0 16px rgba(232,0,45,0.6)}
+.hud-rpm-label{font-family:'Share Tech Mono',monospace;font-size:0.55rem;color:var(--text-muted);letter-spacing:0.15em}
+.hud-ticks{display:flex;align-items:flex-end;gap:2px;height:28px;margin-bottom:3px}
+.hud-tick{flex:1;background:rgba(255,255,255,0.07);border-radius:1px;min-height:4px;transition:background 0.07s}
+.hud-tick.lit-normal{background:var(--teal)}
+.hud-tick.lit-mid{background:var(--amber)}
+.hud-tick.lit-red{background:var(--red);box-shadow:0 0 4px var(--red)}
+.hud-track-wrap{position:relative;height:5px;background:rgba(255,255,255,0.05);border-radius:1px}
+.hud-track-fill{height:100%;width:0%;border-radius:1px;background:linear-gradient(90deg,#00D2BE,#F5A623 60%,#E8002D);position:relative;transition:width 0.04s linear}
+.hud-needle{position:absolute;right:-2px;top:50%;transform:translateY(-50%);width:2px;height:22px;background:#fff;border-radius:2px;box-shadow:0 0 8px #fff,0 0 16px rgba(255,255,255,0.3)}
+.hud-redzone{position:absolute;right:0;top:0;bottom:0;width:16.7%;background:rgba(232,0,45,0.08);border-left:1px solid rgba(232,0,45,0.3);pointer-events:none}
+.hud-rpm-labels{display:flex;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:0.5rem;color:rgba(255,255,255,0.15);margin-top:3px}
+.hud-rpm-labels span:last-child{color:rgba(232,0,45,0.5)}
 
-    .skills-section { border-top:1px solid var(--border); }
-    .skills-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); }
-    .sblock { background:var(--bg2); padding:2.5rem; position:relative; overflow:hidden; transition:background 0.3s; }
-    .sblock:hover { background:var(--bg3); }
-    .sblock-eye {
-      font-family:'JetBrains Mono',monospace; font-size:0.62rem; color:var(--accent);
-      letter-spacing:0.18em; text-transform:uppercase; margin-bottom:1.25rem;
-      display:flex; align-items:center; gap:0.5rem;
-    }
-    .sblock-eye::before { content:''; width:14px; height:1px; background:var(--accent); }
-    .sblock h3 { font-family:'Syne',sans-serif; font-size:1.15rem; font-weight:700; color:var(--text); margin-bottom:1.5rem; letter-spacing:-0.02em; }
-    .slist { list-style:none; }
-    .slist li {
-      display:flex; align-items:center; gap:0.6rem;
-      font-size:0.87rem; color:var(--text-muted); font-weight:300;
-      padding:0.45rem 0; border-bottom:1px solid var(--border); transition:color 0.2s;
-    }
-    .slist li:last-child { border-bottom:none; }
-    .slist li:hover { color:var(--text); }
-    .slist li::before { content:'▸'; color:var(--accent); font-size:0.58rem; flex-shrink:0; }
+/* gear box */
+.hud-gear-box{
+  display:flex;flex-direction:column;align-items:center;
+  border:1px solid var(--border-red);padding:0.5rem 0.75rem;
+  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+}
+.hud-gear-num{
+  font-family:'Orbitron',monospace;font-size:2rem;font-weight:900;
+  color:var(--red);line-height:1;
+}
+.hud-gear-label{font-family:'Share Tech Mono',monospace;font-size:0.5rem;color:var(--text-muted);letter-spacing:0.15em;text-transform:uppercase}
 
-    .contact-section { border-top:1px solid var(--border); }
-    .contact-inner { display:grid; grid-template-columns:1fr 1fr; gap:6rem; align-items:center; }
-    .ct-title {
-      font-family:'Syne',sans-serif; font-size:clamp(2.5rem,5.5vw,4.5rem); font-weight:800;
-      letter-spacing:-0.03em; line-height:1.0; margin-bottom:1.5rem;
-    }
-    .ct-title .grad { background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-    .ct-sub { color:var(--text-muted); font-size:0.95rem; font-weight:300; margin-bottom:2.5rem; line-height:1.8; }
-    .clinks { display:flex; flex-direction:column; }
-    .clink {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:1.25rem 0; border-bottom:1px solid var(--border);
-      text-decoration:none; color:var(--text); transition:color 0.2s, padding-left 0.3s;
-    }
-    .clink:hover { color:var(--accent); padding-left:0.5rem; }
-    .clink-info { display:flex; flex-direction:column; gap:0.2rem; }
-    .clink-label { font-family:'JetBrains Mono',monospace; font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-muted); }
-    .clink-val { font-size:0.95rem; font-weight:500; }
-    .clink-arrow { font-size:1.1rem; color:var(--text-dim); transition:color 0.2s, transform 0.2s; }
-    .clink:hover .clink-arrow { color:var(--accent); transform:translate(4px,-4px); }
+/* scrollable content sits below fixed HUD */
+#content{margin-top:var(--hud-h, 130px)}
 
-    footer {
-      padding:2rem 4rem; border-top:1px solid var(--border);
-      display:flex; justify-content:space-between; align-items:center; position:relative; z-index:1;
-    }
-    footer p { font-family:'JetBrains Mono',monospace; font-size:0.67rem; color:var(--text-muted); letter-spacing:0.08em; }
-    .f-status { display:flex; align-items:center; gap:0.5rem; font-family:'JetBrains Mono',monospace; font-size:0.67rem; color:var(--accent); }
-    .f-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); animation:blink 2s ease-in-out infinite; }
+/* HERO (now just an intro section, no min-height 100vh) */
+.hero{
+  padding:4rem 3rem 3rem;position:relative;z-index:1;
+}
 
-    .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.8s ease, transform 0.8s ease; }
-    .reveal.visible { opacity:1; transform:translateY(0); }
-    .reveal-l { opacity:0; transform:translateX(-20px); transition:opacity 0.7s ease, transform 0.7s ease; }
-    .reveal-l.visible { opacity:1; transform:translateX(0); }
+/* RPM METER */
+.rpm-meter{position:relative;width:100%;max-width:600px;margin-top:2.5rem;opacity:0;animation:fadeUp 0.5s ease 3s forwards;}
+.rpm-meter-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:0.6rem;}
+.rpm-meter-num{font-family:'Orbitron',monospace;font-size:2.8rem;font-weight:900;color:var(--text);letter-spacing:-0.02em;line-height:1;transition:color 0.15s;}
+.rpm-meter-num.redline{color:var(--red);text-shadow:0 0 20px rgba(232,0,45,0.5)}
+.rpm-meter-unit{font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:var(--text-muted);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:0.4rem;}
+.rpm-meter-gear{font-family:'Orbitron',monospace;font-size:3rem;font-weight:900;color:var(--red);line-height:1;min-width:2rem;text-align:right;}
+.rpm-ticks{display:flex;align-items:flex-end;gap:3px;height:44px;margin-bottom:5px;}
+.rpm-tick{flex:1;background:rgba(255,255,255,0.07);border-radius:1px;min-height:6px;transition:background 0.08s,height 0.08s;}
+.rpm-tick.lit-normal{background:var(--teal);}
+.rpm-tick.lit-mid{background:var(--amber);}
+.rpm-tick.lit-red{background:var(--red);box-shadow:0 0 5px var(--red);}
+.rpm-track-wrap{position:relative;height:8px;background:rgba(255,255,255,0.05);border-radius:1px;}
+.rpm-track-fill{height:100%;width:0%;border-radius:1px;background:linear-gradient(90deg,#00D2BE,#F5A623 60%,#E8002D);position:relative;}
+.rpm-needle{position:absolute;right:-2px;top:50%;transform:translateY(-50%);width:3px;height:32px;background:#fff;border-radius:2px;box-shadow:0 0 10px #fff,0 0 20px rgba(255,255,255,0.3);}
+.rpm-redzone{position:absolute;right:0;top:0;bottom:0;width:16.7%;background:rgba(232,0,45,0.1);border-left:1px solid rgba(232,0,45,0.35);pointer-events:none;}
+.rpm-labels{display:flex;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:0.57rem;color:rgba(255,255,255,0.18);letter-spacing:0.06em;margin-top:5px;}
 
-    @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+/* TELEMETRY BAR TOP */
+.telem-bar{
+  display:flex;gap:2rem;align-items:center;margin-bottom:2rem;
+  font-family:'Share Tech Mono',monospace;font-size:0.63rem;color:var(--text-muted);letter-spacing:0.12em;
+  opacity:0;animation:fadeUp 0.5s ease 2.8s forwards;
+}
+.telem-item{display:flex;flex-direction:column;gap:0.2rem}
+.telem-val{color:var(--teal);font-size:0.9rem}
+.telem-sep{width:1px;height:30px;background:var(--border)}
 
-    @media(max-width:900px){
-      nav{padding:1rem 1.5rem} .nav-links{display:none}
-      section{padding:4rem 1.5rem} .hero{padding:7rem 1.5rem 4rem}
-      .about-wrap{grid-template-columns:1fr;gap:3rem}
-      .about-cards{grid-template-columns:1fr 1fr}
-      .exp-item{grid-template-columns:1fr;gap:0.75rem} .exp-num{display:none}
-      .skills-grid{grid-template-columns:1fr}
-      .contact-inner{grid-template-columns:1fr;gap:3rem}
-      .hero-stats{gap:2rem}
-      footer{flex-direction:column;gap:0.75rem;text-align:center;padding:2rem 1.5rem}
-    }
-  </style>
+.hero-driver{
+  font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.25em;
+  text-transform:uppercase;color:var(--red);margin-bottom:1rem;
+  display:flex;align-items:center;gap:0.75rem;
+  opacity:0;animation:fadeUp 0.5s ease 2.6s forwards;
+}
+.hero-driver::before{content:'';width:20px;height:2px;background:var(--red)}
+.hero-num{
+  font-family:'Orbitron',monospace;font-size:clamp(5rem,13vw,11rem);font-weight:900;
+  line-height:0.85;letter-spacing:-0.04em;
+  color:transparent;-webkit-text-stroke:1px rgba(255,255,255,0.08);
+  position:absolute;right:3rem;top:50%;transform:translateY(-60%);
+  z-index:-1;pointer-events:none;
+  opacity:0;animation:fadeIn 0.8s ease 3s forwards;
+}
+.hero-name{
+  font-family:'Orbitron',monospace;font-size:clamp(2.2rem,6vw,5rem);font-weight:900;
+  line-height:0.9;letter-spacing:-0.02em;
+  max-width:640px;
+  opacity:0;animation:fadeUp 0.6s ease 2.7s forwards;
+}
+.hero-name .red{color:var(--red)}
+.hero-name .line2{display:block;font-size:0.55em;font-weight:400;letter-spacing:0.1em;color:var(--text-muted);margin-top:0.5rem;font-family:'Rajdhani',sans-serif}
+
+.hero-divider{
+  width:100%;height:1px;background:linear-gradient(90deg,var(--red),transparent);
+  margin:2rem 0;max-width:500px;
+  opacity:0;animation:expandW 0.6s ease 2.9s forwards;
+}
+.hero-desc{
+  max-width:520px;font-size:1.05rem;font-weight:400;color:var(--text-muted);line-height:1.75;margin-bottom:2.5rem;
+  opacity:0;animation:fadeUp 0.6s ease 3s forwards;
+}
+.hero-desc strong{color:var(--text);font-weight:600}
+
+.hero-cta{
+  display:flex;gap:1rem;flex-wrap:wrap;
+  opacity:0;animation:fadeUp 0.5s ease 3.1s forwards;
+}
+.btn-red{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.85rem 2rem;background:var(--red);color:#fff;
+  font-family:'Orbitron',monospace;font-size:0.65rem;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+  transition:background 0.2s,transform 0.15s;
+}
+.btn-red:hover{background:var(--red2);transform:translateY(-2px)}
+.btn-outline{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.85rem 2rem;border:1px solid var(--border-red);color:var(--red);
+  font-family:'Orbitron',monospace;font-size:0.65rem;font-weight:600;
+  letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+  transition:background 0.2s,transform 0.15s;
+}
+.btn-outline:hover{background:var(--red-dim);transform:translateY(-2px)}
+
+/* STATS STRIP */
+.stats-strip{
+  display:flex;gap:0;margin-top:4rem;border:1px solid var(--border);
+  opacity:0;animation:fadeUp 0.5s ease 3.2s forwards;overflow:hidden;
+}
+.stat-box{
+  flex:1;padding:1.5rem;border-right:1px solid var(--border);
+  position:relative;transition:background 0.2s;
+}
+.stat-box:last-child{border-right:none}
+.stat-box:hover{background:rgba(232,0,45,0.05)}
+.stat-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform 0.4s}
+.stat-box:hover::before{transform:scaleX(1)}
+.stat-n{font-family:'Orbitron',monospace;font-size:1.8rem;font-weight:900;color:var(--red);line-height:1;margin-bottom:0.3rem}
+.stat-l{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase}
+
+/* SECTIONS */
+section{padding:6rem 3rem;position:relative;z-index:1}
+.sec-head{display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem}
+.sec-tag{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--red)}
+.sec-tag-line{flex:1;height:1px;background:linear-gradient(90deg,var(--red),transparent)}
+.sec-title{font-family:'Orbitron',monospace;font-size:clamp(1.6rem,3.5vw,2.8rem);font-weight:900;letter-spacing:-0.02em;line-height:1.05;margin-bottom:3.5rem}
+.sec-title .teal{color:var(--teal)}
+.sec-title .amber{color:var(--amber)}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:5rem;align-items:start;border-top:1px solid var(--border);padding-top:4rem}
+.about-text p{color:var(--text-muted);font-size:1rem;font-weight:400;margin-bottom:1.2rem;line-height:1.8}
+.about-text p strong{color:var(--text);font-weight:600}
+.data-cards{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+.dcard{
+  background:var(--bg2);padding:1.75rem;position:relative;overflow:hidden;transition:background 0.3s;
+}
+.dcard:hover{background:var(--bg3)}
+.dcard::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform 0.4s}
+.dcard:hover::after{transform:scaleX(1)}
+.dcard-n{font-family:'Orbitron',monospace;font-size:2.2rem;font-weight:900;color:var(--red);line-height:1;margin-bottom:0.4rem}
+.dcard-l{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase;line-height:1.5}
+
+/* EXPERIENCE */
+.exp-wrap{border-top:1px solid var(--border)}
+.exp-row{
+  display:grid;grid-template-columns:200px 1fr;gap:4rem;
+  padding:2.5rem 0;border-bottom:1px solid var(--border);
+  position:relative;transition:background 0.2s;
+}
+.exp-row:hover{background:rgba(232,0,45,0.025)}
+.exp-row::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--grad);transform:scaleY(0);transform-origin:top;transition:transform 0.5s;
+}
+.exp-row:hover::before{transform:scaleY(1)}
+.exp-meta-date{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--teal);letter-spacing:0.08em;margin-bottom:0.35rem}
+.exp-meta-co{font-family:'Share Tech Mono',monospace;font-size:0.68rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em}
+.exp-meta-n{font-family:'Orbitron',monospace;font-size:2.5rem;font-weight:900;color:var(--text-dim);line-height:1;margin-top:0.75rem}
+.exp-r{font-family:'Orbitron',monospace;font-size:1.3rem;font-weight:700;color:var(--text);margin-bottom:0.85rem;line-height:1.2;letter-spacing:-0.01em}
+.exp-d{font-size:0.95rem;color:var(--text-muted);font-weight:400;line-height:1.8;margin-bottom:1.1rem}
+.tags{display:flex;flex-wrap:wrap;gap:0.4rem}
+.tag{
+  padding:0.22rem 0.65rem;background:var(--bg3);
+  border:1px solid var(--border);font-family:'Share Tech Mono',monospace;
+  font-size:0.6rem;color:var(--text-muted);letter-spacing:0.06em;
+  clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px));
+  transition:border-color 0.2s,color 0.2s;
+}
+.tag:hover{border-color:var(--red);color:var(--red)}
+
+/* SKILLS */
+.skills-wrap{border-top:1px solid var(--border)}
+.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.sk{background:var(--bg2);padding:2.2rem;position:relative;overflow:hidden;transition:background 0.3s}
+.sk:hover{background:var(--bg3)}
+.sk::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--grad);transform:scaleY(0);transform-origin:bottom;transition:transform 0.4s}
+.sk:hover::before{transform:scaleY(1)}
+.sk-head{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--red);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}
+.sk-head::before{content:'';width:12px;height:1px;background:var(--red)}
+.sk h3{font-family:'Orbitron',monospace;font-size:0.95rem;font-weight:700;color:var(--text);margin-bottom:1.25rem;letter-spacing:0.02em}
+.sk-list{list-style:none}
+.sk-list li{
+  font-size:0.92rem;color:var(--text-muted);padding:0.4rem 0;
+  border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.6rem;
+  transition:color 0.2s;
+}
+.sk-list li:last-child{border-bottom:none}
+.sk-list li:hover{color:var(--text)}
+.sk-list li::before{content:'›';color:var(--red);font-size:1rem;line-height:1}
+
+/* CONTACT */
+.contact-wrap{border-top:1px solid var(--border)}
+.ct-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.ct-title{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,4vw,3.2rem);font-weight:900;letter-spacing:-0.02em;line-height:1.0;margin-bottom:1.2rem}
+.ct-title .red{color:var(--red)}
+.ct-sub{color:var(--text-muted);font-size:0.95rem;font-weight:400;margin-bottom:2rem;line-height:1.75}
+.ct-links{display:flex;flex-direction:column}
+.ct-link{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.1rem 0;border-bottom:1px solid var(--border);
+  text-decoration:none;color:var(--text);transition:color 0.2s,padding-left 0.3s;
+}
+.ct-link:hover{color:var(--red);padding-left:0.5rem}
+.ct-link-info{display:flex;flex-direction:column;gap:0.15rem}
+.ct-link-label{font-family:'Share Tech Mono',monospace;font-size:0.58rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-muted)}
+.ct-link-val{font-size:0.95rem;font-weight:500}
+.ct-arrow{font-size:1rem;color:var(--text-dim);transition:color 0.2s,transform 0.2s}
+.ct-link:hover .ct-arrow{color:var(--red);transform:translate(4px,-4px)}
+
+/* FOOTER */
+footer{
+  padding:1.5rem 3rem;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;
+}
+.f-left{font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:var(--text-muted);letter-spacing:0.1em}
+.f-right{display:flex;align-items:center;gap:0.5rem;font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:var(--teal)}
+.f-dot{width:5px;height:5px;border-radius:50%;background:var(--teal);animation:blink 1.5s ease-in-out infinite}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.on{opacity:1;transform:translateY(0)}
+.reveal-l{opacity:0;transform:translateX(-20px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal-l.on{opacity:1;transform:translateX(0)}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes revealText{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0% 0 0)}}
+@keyframes loadBar{from{width:0}to{width:100%}}
+@keyframes expandW{from{opacity:0;max-width:0}to{opacity:1;max-width:500px}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem}.nav-links{display:none}
+  section{padding:4rem 1.5rem}.hero{padding:6rem 1.5rem 3rem}
+  .about-grid{grid-template-columns:1fr;gap:3rem}
+  .data-cards{grid-template-columns:1fr 1fr}
+  .exp-row{grid-template-columns:1fr;gap:0.5rem}.exp-meta-n{display:none}
+  .skills-grid{grid-template-columns:1fr}
+  .ct-inner{grid-template-columns:1fr;gap:3rem}
+  .stats-strip{flex-wrap:wrap}.stat-box{flex:1 1 40%;border-right:none;border-bottom:1px solid var(--border)}
+  footer{flex-direction:column;gap:0.5rem;text-align:center;padding:1.5rem}
+}
+</style>
 </head>
 <body>
 
-<canvas id="particle-canvas"></canvas>
-<div class="grid-bg"></div>
-
-<nav>
-  <a href="#" class="nav-logo">AS/</a>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-</nav>
-
-<section class="hero" id="home">
-  <div class="hero-badge"><div class="hero-badge-dot"></div>Available for new opportunities &nbsp;·&nbsp; Dubai, UAE</div>
-  <h1 class="hero-name">Abdullah<br /><span class="grad">Siyadh</span></h1>
-  <p class="hero-mono"><span class="c">// </span>Data Analyst &nbsp;·&nbsp; Supply Chain &nbsp;·&nbsp; Sales Operations<span class="c"> //</span></p>
-  <p class="hero-desc">I turn <strong>complex automotive data</strong> into decisions that move inventory, reduce variance, and sharpen dealer performance across UAE and MENA. 4+ years at the intersection of data and distribution.</p>
-  <div class="hero-cta">
-    <a href="#experience" class="btn-primary">View Experience →</a>
-    <a href="#contact" class="btn-ghost">Get in Touch</a>
+<!-- LOADER -->
+<div id="loader">
+  <div style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--text-muted);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:0.5rem">
+    <span style="color:var(--teal)">SYS</span> · INITIALIZING DRIVER PROFILE
   </div>
-  <div class="hero-stats">
-    <div><div class="hstat-num">4+</div><div class="hstat-label">Years Experience</div></div>
-    <div><div class="hstat-num">16</div><div class="hstat-label">Branches Tracked</div></div>
-    <div><div class="hstat-num">3</div><div class="hstat-label">OEM Brands</div></div>
-    <div><div class="hstat-num">MENA</div><div class="hstat-label">Distribution Scope</div></div>
+  <div class="loader-name">SIYADH<span>.</span>AS</div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+  <div class="loader-status">STATUS: <span>LOADING TELEMETRY DATA...</span></div>
+</div>
+
+<canvas id="track-canvas"></canvas>
+
+<!-- FIXED HUD -->
+<div id="hud">
+  <!-- top nav strip -->
+  <div class="hud-nav">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-mark">AS</div>
+      <span class="nav-logo-text">SIYADH<span>.</span>IO</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">PROFILE</a></li>
+      <li><a href="#experience">CAREER</a></li>
+      <li><a href="#skills">SYSTEMS</a></li>
+      <li><a href="#contact">COMMS</a></li>
+    </ul>
+    <div class="nav-lap">LIVE · DUBAI, UAE</div>
+  </div>
+  <!-- dashboard strip -->
+  <div class="hud-dash">
+    <!-- driver -->
+    <div class="hud-driver">
+      <div class="hud-driver-name">ABDULLAH <span>SIYADH</span></div>
+      <div class="hud-driver-role">Data Analyst · Supply Chain · UAE</div>
+    </div>
+    <!-- rpm meter -->
+    <div class="hud-rpm">
+      <div class="hud-rpm-top">
+        <div>
+          <span class="hud-rpm-num" id="hud-rpm-num">00800</span>
+          <span class="hud-rpm-label"> RPM</span>
+        </div>
+        <span class="hud-rpm-label" id="hud-speed">009 KM/H</span>
+      </div>
+      <div class="hud-ticks" id="hud-ticks"></div>
+      <div class="hud-track-wrap">
+        <div class="hud-redzone"></div>
+        <div class="hud-track-fill" id="hud-fill">
+          <div class="hud-needle"></div>
+        </div>
+      </div>
+      <div class="hud-rpm-labels">
+        <span>0</span><span>2</span><span>4</span><span>6</span><span>8</span><span>10</span><span>12</span><span>14</span><span>16</span><span>18k</span>
+      </div>
+    </div>
+    <!-- gear -->
+    <div class="hud-gear-box">
+      <div class="hud-gear-num" id="hud-gear">P</div>
+      <div class="hud-gear-label">Gear</div>
+    </div>
+  </div>
+</div>
+
+<!-- SCROLLABLE CONTENT -->
+<div id="content">
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="telem-bar">
+    <div class="telem-item"><div class="telem-val" id="t-speed">000</div><div>KM/H</div></div>
+    <div class="telem-sep"></div>
+    <div class="telem-item"><div class="telem-val">DXB</div><div>CIRCUIT</div></div>
+    <div class="telem-sep"></div>
+    <div class="telem-item"><div class="telem-val">1:24.3</div><div>BEST LAP</div></div>
+  </div>
+
+  <div class="hero-driver">DRIVER PROFILE · DATA ANALYST · SUPPLY CHAIN</div>
+
+  <h1 class="hero-name">
+    ABDULLAH <span class="red">SIYADH</span>
+    <span class="line2">Automotive Data & Supply Chain Specialist</span>
+  </h1>
+
+  <div class="hero-divider"></div>
+
+  <p class="hero-desc">
+    I turn <strong>complex automotive data</strong> into decisions that move inventory, reduce variance, and sharpen dealer performance. 4+ years racing through the UAE and MENA supply chain at full throttle.
+  </p>
+
+  <div class="hero-cta">
+    <a href="#experience" class="btn-red">View Career →</a>
+    <a href="#contact" class="btn-outline">Open Comms</a>
+  </div>
+
+  <div class="stats-strip">
+    <div class="stat-box"><div class="stat-n">4+</div><div class="stat-l">Years on Track</div></div>
+    <div class="stat-box"><div class="stat-n">16</div><div class="stat-l">Branches</div></div>
+    <div class="stat-box"><div class="stat-n">3</div><div class="stat-l">OEM Brands</div></div>
+    <div class="stat-box"><div class="stat-n">MENA</div><div class="stat-l">Distribution Zone</div></div>
   </div>
 </section>
 
+<!-- ABOUT -->
 <section id="about">
-  <p class="sec-eye reveal">About</p>
-  <h2 class="sec-title reveal">Where data meets<br />the <span class="grad">supply chain.</span></h2>
-  <div class="about-wrap">
+  <div class="sec-head reveal"><span class="sec-tag">Driver Profile</span><div class="sec-tag-line"></div></div>
+  <h2 class="sec-title reveal">WHERE DATA MEETS<br />THE <span class="teal">SUPPLY CHAIN.</span></h2>
+  <div class="about-grid">
     <div class="about-text reveal-l">
       <p>I specialise in the intersection of <strong>sales analytics, S&OP, and distribution operations</strong> — built across four years in some of the most demanding automotive and logistics environments in the region.</p>
-      <p>From EWM-driven warehousing under <strong>Mitsubishi FUSO</strong> to fill rate analytics under <strong>Mercedes-Benz Trucks MEA</strong> at DHL, I've always worked where field complexity meets data.</p>
+      <p>From EWM-driven warehousing under <strong>Mitsubishi FUSO</strong> to fill rate analytics under <strong>Mercedes-Benz Trucks MEA</strong> at DHL, I've always operated where field complexity meets the data layer.</p>
       <p>At <strong>Al Habtoor Motors</strong>, I lead sales analytics across MMC, FUSO, and JAC — 16 branches, multi-brand KPI reporting, Python automation pipelines, and forecast modelling built from scratch.</p>
       <br/>
-      <a href="#contact" class="btn-ghost" style="width:fit-content">Let's Connect →</a>
+      <a href="#contact" class="btn-outline" style="width:fit-content">Open Comms →</a>
     </div>
-    <div class="about-cards reveal">
-      <div class="acard"><div class="acard-num">4+</div><div class="acard-label">Years in Automotive & Logistics</div></div>
-      <div class="acard"><div class="acard-num">16</div><div class="acard-label">UAE Branches Tracked</div></div>
-      <div class="acard"><div class="acard-num">3</div><div class="acard-label">OEM Brands Managed</div></div>
-      <div class="acard"><div class="acard-num">MENA</div><div class="acard-label">Distribution Scope</div></div>
-    </div>
-  </div>
-</section>
-
-<section id="experience" class="exp-section">
-  <p class="sec-eye reveal">Career</p>
-  <h2 class="sec-title reveal">Experience</h2>
-
-  <div class="exp-item reveal">
-    <div><div class="exp-date">Nov 2025 — Present</div><div class="exp-co">Al Habtoor Motors</div><div class="exp-num">01</div></div>
-    <div>
-      <div class="exp-role">Data Analyst — Sales Operations</div>
-      <p class="exp-desc">Sales performance tracking, variance analysis, and forecasting across MMC, FUSO, and JAC. Built end-to-end Python automation — SAP Fiori exports via Selenium, daily HTML→PDF forecast reports via Playwright — and standardised dealer reporting across 16 UAE branches.</p>
-      <div class="exp-tags"><span class="tag">Python</span><span class="tag">Power BI</span><span class="tag">SAP Fiori</span><span class="tag">Selenium</span><span class="tag">Playwright</span><span class="tag">Forecasting</span><span class="tag">Dealer KPIs</span></div>
-    </div>
-  </div>
-
-  <div class="exp-item reveal">
-    <div><div class="exp-date">Jul 2024 — Sep 2025</div><div class="exp-co">DHL Supply Chain</div><div class="exp-num">02</div></div>
-    <div>
-      <div class="exp-role">Business Analyst</div>
-      <p class="exp-desc">Embedded within the Mercedes-Benz Trucks MEA account. Managed WIMS analytics, led cycle count programmes, improved fill rate visibility, and developed a distributor consultancy framework for commercial vehicle parts across MENA and Africa.</p>
-      <div class="exp-tags"><span class="tag">WIMS</span><span class="tag">DMS</span><span class="tag">Fill Rate</span><span class="tag">Cycle Count</span><span class="tag">MENA Distribution</span></div>
-    </div>
-  </div>
-
-  <div class="exp-item reveal">
-    <div><div class="exp-date">Nov 2022 — Jun 2024</div><div class="exp-co">DSV Logistics</div><div class="exp-num">03</div></div>
-    <div>
-      <div class="exp-role">Supply Chain Analyst</div>
-      <p class="exp-desc">Supported Mitsubishi FUSO parts and vehicle logistics. Delivered SAP/EWM warehouse reporting and KPI dashboards for inbound and outbound flows across the UAE distribution network.</p>
-      <div class="exp-tags"><span class="tag">SAP EWM</span><span class="tag">Inventory</span><span class="tag">KPI Dashboards</span><span class="tag">Advanced Excel</span></div>
-    </div>
-  </div>
-
-  <div class="exp-item reveal">
-    <div><div class="exp-date">Aug 2021 — Aug 2022</div><div class="exp-co">Nearoo</div><div class="exp-num">04</div></div>
-    <div>
-      <div class="exp-role">Logistics Operations</div>
-      <p class="exp-desc">Built e-commerce logistics KPI frameworks and inventory operations from scratch for a fast-growing regional fulfilment startup.</p>
-      <div class="exp-tags"><span class="tag">E-commerce</span><span class="tag">KPIs</span><span class="tag">Inventory</span><span class="tag">Operations</span></div>
+    <div class="data-cards reveal">
+      <div class="dcard"><div class="dcard-n">4+</div><div class="dcard-l">Years in Automotive & Logistics</div></div>
+      <div class="dcard"><div class="dcard-n">16</div><div class="dcard-l">UAE Branches Tracked</div></div>
+      <div class="dcard"><div class="dcard-n">3</div><div class="dcard-l">OEM Brands Managed</div></div>
+      <div class="dcard"><div class="dcard-n">MENA</div><div class="dcard-l">Distribution Scope</div></div>
     </div>
   </div>
 </section>
 
-<section id="skills" class="skills-section">
-  <p class="sec-eye reveal">Expertise</p>
-  <h2 class="sec-title reveal">What I <span class="grad">bring.</span></h2>
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="sec-head reveal exp-wrap"><span class="sec-tag">Career Laps</span><div class="sec-tag-line"></div></div>
+  <h2 class="sec-title reveal">RACE <span class="amber">HISTORY.</span></h2>
+
+  <div class="exp-row reveal">
+    <div><div class="exp-meta-date">NOV 2025 — PRESENT</div><div class="exp-meta-co">Al Habtoor Motors</div><div class="exp-meta-n">01</div></div>
+    <div>
+      <div class="exp-r">Data Analyst — Sales Operations</div>
+      <p class="exp-d">Sales performance tracking, variance analysis, and forecasting across MMC, FUSO, and JAC. Built end-to-end Python automation — SAP Fiori exports via Selenium, daily HTML→PDF forecast reports via Playwright — and standardised dealer reporting across 16 UAE branches.</p>
+      <div class="tags"><span class="tag">Python</span><span class="tag">Power BI</span><span class="tag">SAP Fiori</span><span class="tag">Selenium</span><span class="tag">Playwright</span><span class="tag">Forecasting</span><span class="tag">Dealer KPIs</span></div>
+    </div>
+  </div>
+
+  <div class="exp-row reveal">
+    <div><div class="exp-meta-date">JUL 2024 — SEP 2025</div><div class="exp-meta-co">DHL Supply Chain</div><div class="exp-meta-n">02</div></div>
+    <div>
+      <div class="exp-r">Business Analyst</div>
+      <p class="exp-d">Embedded within the Mercedes-Benz Trucks MEA account. WIMS analytics, cycle count programmes, fill rate improvement, and a distributor consultancy framework for commercial vehicle parts across MENA and Africa.</p>
+      <div class="tags"><span class="tag">WIMS</span><span class="tag">DMS</span><span class="tag">Fill Rate</span><span class="tag">Cycle Count</span><span class="tag">MENA Distribution</span></div>
+    </div>
+  </div>
+
+  <div class="exp-row reveal">
+    <div><div class="exp-meta-date">NOV 2022 — JUN 2024</div><div class="exp-meta-co">DSV Logistics</div><div class="exp-meta-n">03</div></div>
+    <div>
+      <div class="exp-r">Supply Chain Analyst</div>
+      <p class="exp-d">Mitsubishi FUSO parts and vehicle logistics. SAP/EWM warehouse reporting and KPI dashboards for inbound and outbound flows across the UAE distribution network.</p>
+      <div class="tags"><span class="tag">SAP EWM</span><span class="tag">Inventory</span><span class="tag">KPI Dashboards</span><span class="tag">Advanced Excel</span></div>
+    </div>
+  </div>
+
+  <div class="exp-row reveal">
+    <div><div class="exp-meta-date">AUG 2021 — AUG 2022</div><div class="exp-meta-co">Nearoo</div><div class="exp-meta-n">04</div></div>
+    <div>
+      <div class="exp-r">Logistics Operations</div>
+      <p class="exp-d">Built e-commerce logistics KPI frameworks and inventory operations from scratch for a fast-growing regional fulfilment startup.</p>
+      <div class="tags"><span class="tag">E-commerce</span><span class="tag">KPIs</span><span class="tag">Inventory</span><span class="tag">Operations</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="sec-head reveal skills-wrap"><span class="sec-tag">Onboard Systems</span><div class="sec-tag-line"></div></div>
+  <h2 class="sec-title reveal">TECHNICAL <span class="teal">STACK.</span></h2>
   <div class="skills-grid reveal">
-    <div class="sblock">
-      <div class="sblock-eye">Analytics & BI</div>
+    <div class="sk">
+      <div class="sk-head">Analytics</div>
       <h3>Data & Reporting</h3>
-      <ul class="slist">
+      <ul class="sk-list">
         <li>Power BI / DAX</li><li>Qlik Sense</li><li>Advanced Excel & VBA</li>
         <li>Python — pandas, Selenium, Playwright</li><li>SQL / Snowflake</li>
       </ul>
     </div>
-    <div class="sblock">
-      <div class="sblock-eye">Operations</div>
+    <div class="sk">
+      <div class="sk-head">Operations</div>
       <h3>Supply Chain & S&OP</h3>
-      <ul class="slist">
-        <li>Demand Planning & Forecasting</li><li>SAP / EWM</li><li>Inventory Management</li>
-        <li>IMS & Forecast Accuracy</li><li>Dealer & Distributor KPIs</li>
+      <ul class="sk-list">
+        <li>Demand Planning & Forecasting</li><li>SAP / EWM</li>
+        <li>Inventory Management</li><li>IMS & Forecast Accuracy</li><li>Dealer & Distributor KPIs</li>
       </ul>
     </div>
-    <div class="sblock">
-      <div class="sblock-eye">Domain</div>
+    <div class="sk">
+      <div class="sk-head">Domain</div>
       <h3>Industry Knowledge</h3>
-      <ul class="slist">
+      <ul class="sk-list">
         <li>Automotive OEM — MMC, FUSO, JAC, MB</li><li>Commercial Vehicle Distribution</li>
         <li>UAE & MENA Market</li><li>Aftersales Parts Logistics</li><li>Multi-branch Retail Operations</li>
       </ul>
@@ -365,89 +573,313 @@
   </div>
 </section>
 
-<section id="contact" class="contact-section">
-  <div class="contact-inner">
+<!-- CONTACT -->
+<section id="contact">
+  <div class="sec-head reveal contact-wrap"><span class="sec-tag">Comms</span><div class="sec-tag-line"></div></div>
+  <div class="ct-inner">
     <div>
-      <p class="sec-eye reveal">Contact</p>
-      <h2 class="ct-title reveal">Let's build<br />something<br /><span class="grad">together.</span></h2>
+      <h2 class="ct-title reveal">LET'S BUILD<br />SOMETHING<br /><span class="red">TOGETHER.</span></h2>
       <p class="ct-sub reveal">Open to roles in sales operations, demand planning, supply chain analytics, and data strategy across automotive, FMCG, and distribution.</p>
-      <a href="mailto:hello@abdullahsiyadh.com" class="btn-primary reveal" style="width:fit-content">Send a Message →</a>
+      <a href="mailto:hello@abdullahsiyadh.com" class="btn-red reveal" style="width:fit-content">Send Message →</a>
     </div>
-    <div class="clinks reveal">
-      <a href="mailto:hello@abdullahsiyadh.com" class="clink">
-        <div class="clink-info"><span class="clink-label">Email</span><span class="clink-val">hello@abdullahsiyadh.com</span></div>
-        <span class="clink-arrow">↗</span>
+    <div class="ct-links reveal">
+      <a href="mailto:hello@abdullahsiyadh.com" class="ct-link">
+        <div class="ct-link-info"><span class="ct-link-label">Email</span><span class="ct-link-val">hello@abdullahsiyadh.com</span></div>
+        <span class="ct-arrow">↗</span>
       </a>
-      <a href="https://linkedin.com/in/abdullahsiyadh" target="_blank" class="clink">
-        <div class="clink-info"><span class="clink-label">LinkedIn</span><span class="clink-val">linkedin.com/in/abdullahsiyadh</span></div>
-        <span class="clink-arrow">↗</span>
+      <a href="https://linkedin.com/in/abdullahsiyadh" target="_blank" class="ct-link">
+        <div class="ct-link-info"><span class="ct-link-label">LinkedIn</span><span class="ct-link-val">linkedin.com/in/abdullahsiyadh</span></div>
+        <span class="ct-arrow">↗</span>
       </a>
-      <a href="https://abdullahsiyadh.com" class="clink">
-        <div class="clink-info"><span class="clink-label">Website</span><span class="clink-val">abdullahsiyadh.com</span></div>
-        <span class="clink-arrow">↗</span>
+      <a href="https://abdullahsiyadh.com" class="ct-link">
+        <div class="ct-link-info"><span class="ct-link-label">Website</span><span class="ct-link-val">abdullahsiyadh.com</span></div>
+        <span class="ct-arrow">↗</span>
       </a>
     </div>
   </div>
 </section>
 
+</div><!-- /#content -->
+
 <footer>
-  <p>© 2026 Abdullah Siyadh</p>
-  <div class="f-status"><div class="f-dot"></div>Open to opportunities</div>
+  <div class="f-left">© 2026 ABDULLAH SIYADH · abdullahsiyadh.com</div>
+  <div class="f-right"><div class="f-dot"></div>OPEN TO OPPORTUNITIES</div>
 </footer>
 
 <script>
-const canvas = document.getElementById('particle-canvas');
-const ctx = canvas.getContext('2d');
-let W, H, particles = [], mouse = {x:-9999,y:-9999};
+// ── LOADER ──
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('gone');
+  }, 2400);
+});
 
-function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-
-function mkParticles(){
-  particles = [];
-  const n = Math.floor(W * H / 13000);
-  for(let i=0;i<n;i++){
-    particles.push({
-      x: Math.random()*W, y: Math.random()*H,
-      r: 0.8 + Math.random()*1.6,
-      vx: (Math.random()-0.5)*0.2, vy: (Math.random()-0.5)*0.2,
-      op: 0.2 + Math.random()*0.55,
-      col: Math.random()>0.55 ? '#00F5A0' : Math.random()>0.5 ? '#00B4FF' : '#ffffff'
-    });
-  }
+// ── TRACK PARTICLE CANVAS ──
+const tc = document.getElementById('track-canvas');
+const tx = tc.getContext('2d');
+let TW, TH, dots = [];
+function resizeTrack(){ TW = tc.width = window.innerWidth; TH = tc.height = window.innerHeight; }
+function mkDots(){
+  dots = [];
+  const n = Math.floor(TW * TH / 15000);
+  for(let i=0;i<n;i++) dots.push({
+    x: Math.random()*TW, y: Math.random()*TH,
+    r: 0.5+Math.random()*1.2,
+    vx:(Math.random()-0.5)*0.3, vy:(Math.random()-0.5)*0.3,
+    op:0.15+Math.random()*0.4,
+    col: Math.random()>0.6?'#E8002D':Math.random()>0.5?'#00D2BE':'#F5A623'
+  });
 }
-
-function draw(){
-  ctx.clearRect(0,0,W,H);
-  for(let i=0;i<particles.length;i++){
-    const p = particles[i];
-    p.x += p.vx; p.y += p.vy;
-    if(p.x<0) p.x=W; if(p.x>W) p.x=0;
-    if(p.y<0) p.y=H; if(p.y>H) p.y=0;
-    const dx=p.x-mouse.x, dy=p.y-mouse.y, d=Math.sqrt(dx*dx+dy*dy);
-    if(d<130){ p.x+=dx/d*0.9; p.y+=dy/d*0.9; }
-    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=p.col; ctx.globalAlpha=p.op; ctx.fill();
-    for(let j=i+1;j<particles.length;j++){
-      const q=particles[j];
-      const ex=p.x-q.x, ey=p.y-q.y, ed=Math.sqrt(ex*ex+ey*ey);
-      if(ed<95){
-        ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y);
-        ctx.strokeStyle='#00F5A0'; ctx.globalAlpha=(1-ed/95)*0.07;
-        ctx.lineWidth=0.5; ctx.stroke();
+function drawTrack(){
+  tx.clearRect(0,0,TW,TH);
+  for(let i=0;i<dots.length;i++){
+    const d=dots[i];
+    d.x+=d.vx; d.y+=d.vy;
+    if(d.x<0)d.x=TW; if(d.x>TW)d.x=0;
+    if(d.y<0)d.y=TH; if(d.y>TH)d.y=0;
+    tx.beginPath(); tx.arc(d.x,d.y,d.r,0,Math.PI*2);
+    tx.fillStyle=d.col; tx.globalAlpha=d.op; tx.fill();
+    for(let j=i+1;j<dots.length;j++){
+      const e=dots[j], dx=d.x-e.x, dy=d.y-e.y, dd=Math.sqrt(dx*dx+dy*dy);
+      if(dd<90){
+        tx.beginPath(); tx.moveTo(d.x,d.y); tx.lineTo(e.x,e.y);
+        tx.strokeStyle='#E8002D'; tx.globalAlpha=(1-dd/90)*0.06;
+        tx.lineWidth=0.5; tx.stroke();
       }
     }
-    ctx.globalAlpha=1;
+    tx.globalAlpha=1;
   }
-  requestAnimationFrame(draw);
+  requestAnimationFrame(drawTrack);
+}
+window.addEventListener('resize',()=>{ resizeTrack(); mkDots(); });
+resizeTrack(); mkDots(); drawTrack();
+
+// ── RPM METER (drives HUD) ──
+let currentRPM = 0, targetRPM = 800;
+const MAX_RPM = 18000;
+const TICK_COUNT = 40;
+const gearMap = [[0,500,'P'],[500,3000,'1'],[3000,6000,'2'],[6000,10000,'3'],[10000,14000,'4'],[14000,16500,'5'],[16500,18000,'6']];
+
+// build HUD ticks
+const hudTicks = document.getElementById('hud-ticks');
+if(hudTicks){
+  for(let i=0;i<TICK_COUNT;i++){
+    const t = document.createElement('div');
+    t.className = 'hud-tick';
+    t.style.height = (i % 4 === 0) ? '100%' : '55%';
+    hudTicks.appendChild(t);
+  }
 }
 
-window.addEventListener('mousemove',e=>{ mouse.x=e.clientX; mouse.y=e.clientY; });
-window.addEventListener('resize',()=>{ resize(); mkParticles(); });
-resize(); mkParticles(); draw();
+// measure HUD height and set content offset
+function setHudOffset(){
+  const hud = document.getElementById('hud');
+  const content = document.getElementById('content');
+  if(hud && content) content.style.marginTop = hud.offsetHeight + 'px';
+}
+setHudOffset();
+window.addEventListener('resize', setHudOffset);
 
+function updateHUD(rpm){
+  const pct = rpm / MAX_RPM;
+  const g = gearMap.find(([lo,hi]) => rpm >= lo && rpm < hi);
+
+  const fillEl  = document.getElementById('hud-fill');
+  const numEl   = document.getElementById('hud-rpm-num');
+  const gearEl  = document.getElementById('hud-gear');
+  const speedEl = document.getElementById('hud-speed');
+
+  if(fillEl) fillEl.style.width = (pct*100).toFixed(2)+'%';
+  if(numEl){
+    numEl.textContent = Math.round(rpm).toString().padStart(5,'0');
+    numEl.classList.toggle('redline', rpm >= 15000);
+  }
+  if(gearEl && g) gearEl.textContent = g[2];
+  if(speedEl) speedEl.textContent = Math.round(rpm/90).toString().padStart(3,'0')+' KM/H';
+
+  // light ticks
+  if(hudTicks){
+    const litCount = Math.floor(pct * TICK_COUNT);
+    hudTicks.querySelectorAll('.hud-tick').forEach((t,i)=>{
+      t.classList.remove('lit-normal','lit-mid','lit-red');
+      if(i < litCount){
+        const p = i/TICK_COUNT;
+        if(p < 0.55) t.classList.add('lit-normal');
+        else if(p < 0.83) t.classList.add('lit-mid');
+        else t.classList.add('lit-red');
+      }
+    });
+  }
+
+  // update sticky widget too
+  const sgBar  = document.getElementById('sg-bar');
+  const sgRpm  = document.getElementById('sg-rpm');
+  const sgGear = document.getElementById('sg-gear');
+  if(sgBar){
+    sgBar.style.width=(pct*100).toFixed(2)+'%';
+    sgBar.style.background = rpm>15000 ? '#E8002D' : 'linear-gradient(90deg,#00D2BE,#F5A623,#E8002D)';
+    sgBar.style.boxShadow  = rpm>15000 ? '0 0 6px #E8002D' : 'none';
+  }
+  if(sgRpm) sgRpm.textContent = Math.round(rpm).toString().padStart(5,'0');
+  if(sgGear && g) sgGear.textContent = g[2];
+}
+
+function animateMeter(){
+  const diff = targetRPM - currentRPM;
+  currentRPM += diff * 0.07;
+  if(Math.abs(diff) < 1) currentRPM = targetRPM;
+  updateHUD(currentRPM);
+  requestAnimationFrame(animateMeter);
+}
+animateMeter();
+
+// ── SCROLL → RPM ──
+// Map scroll progress (0→1) to RPM (800→18000)
+// Also add a small "bounce" when direction changes
+let lastScroll = 0, scrollDir = 1, bounceOffset = 0;
+
+function getScrollRPM(){
+  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+  if(maxScroll <= 0) return 800;
+  const progress = Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
+  // base RPM: 800 idle at top, 18000 redline at bottom
+  const base = 800 + progress * 17200;
+  return Math.min(18000, Math.max(800, base + bounceOffset));
+}
+
+window.addEventListener('scroll', () => {
+  const sy = window.scrollY;
+  const dir = sy > lastScroll ? 1 : -1;
+
+  // small kick when reversing direction (like lifting off throttle)
+  if(dir !== scrollDir){
+    bounceOffset = dir === 1 ? 600 : -600;
+    setTimeout(()=>{ bounceOffset = 0; }, 300);
+  }
+  scrollDir = dir;
+  lastScroll = sy;
+
+  if(typeof targetRPM !== 'undefined'){
+    targetRPM = getScrollRPM();
+  }
+}, { passive: true });
+
+// ── STICKY MINI GAUGE (bottom-right corner) ──
+const stickyGauge = document.createElement('div');
+stickyGauge.id = 'sticky-gauge';
+stickyGauge.innerHTML = `
+  <div id="sg-bar-wrap">
+    <div id="sg-bar"></div>
+  </div>
+  <div id="sg-readout">
+    <span id="sg-rpm">00000</span>
+    <span id="sg-label">RPM</span>
+  </div>
+  <div id="sg-gear-wrap"><span id="sg-gear">P</span></div>
+`;
+document.body.appendChild(stickyGauge);
+
+// inject sticky gauge styles
+const sgStyle = document.createElement('style');
+sgStyle.textContent = `
+#sticky-gauge {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: rgba(3,3,5,0.92);
+  border: 1px solid rgba(232,0,45,0.25);
+  padding: 12px 14px;
+  backdrop-filter: blur(16px);
+  clip-path: polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+  min-width: 90px;
+}
+#sg-bar-wrap {
+  width: 100%;
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+#sg-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #00D2BE, #F5A623, #E8002D);
+  border-radius: 2px;
+  transition: width 0.1s linear;
+}
+#sg-readout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+#sg-rpm {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: #F0EEF8;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+#sg-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.55rem;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.2em;
+}
+#sg-gear-wrap {
+  width: 28px;
+  height: 28px;
+  background: #E8002D;
+  clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#sg-gear {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: #fff;
+}
+`;
+document.head.appendChild(sgStyle);
+
+// update sticky gauge every frame
+function updateStickyGauge(){
+  if(typeof currentRPM === 'undefined'){ requestAnimationFrame(updateStickyGauge); return; }
+  const pct = (currentRPM / 18000) * 100;
+  const bar = document.getElementById('sg-bar');
+  const rpmEl = document.getElementById('sg-rpm');
+  const gearEl = document.getElementById('sg-gear');
+  if(bar) bar.style.width = pct + '%';
+  if(rpmEl) rpmEl.textContent = Math.round(currentRPM).toString().padStart(5,'0');
+  const gearMap2 = [[0,500,'P'],[500,3000,'1'],[3000,6000,'2'],[6000,10000,'3'],[10000,14000,'4'],[14000,16500,'5'],[16500,18000,'6']];
+  const g2 = gearMap2.find(([lo,hi])=> currentRPM>=lo && currentRPM<hi);
+  if(gearEl && g2) gearEl.textContent = g2[2];
+  // colour bar red when above 15000
+  if(bar){
+    if(currentRPM > 15000){
+      bar.style.background = '#E8002D';
+      bar.style.boxShadow = '0 0 6px #E8002D';
+    } else {
+      bar.style.background = 'linear-gradient(90deg,#00D2BE,#F5A623,#E8002D)';
+      bar.style.boxShadow = 'none';
+    }
+  }
+  requestAnimationFrame(updateStickyGauge);
+}
+updateStickyGauge();
+
+// ── SCROLL REVEAL ──
 const obs = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
-},{threshold:0.1});
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); obs.unobserve(e.target); } });
+},{threshold:0.08});
 document.querySelectorAll('.reveal,.reveal-l').forEach(el=>obs.observe(el));
 </script>
 </body>
