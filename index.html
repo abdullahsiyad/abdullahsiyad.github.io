@@ -362,8 +362,7 @@ footer{
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
 @media(max-width:900px){
-  nav{padding:1rem 1.5rem}.nav-links{display:none}
-  section{padding:4rem 1.5rem}.hero{padding:6rem 1.5rem 3rem}
+  section{padding:4rem 1.5rem}.hero{padding:3rem 1.5rem 2rem}
   .about-grid{grid-template-columns:1fr;gap:3rem}
   .data-cards{grid-template-columns:1fr 1fr}
   .exp-row{grid-template-columns:1fr;gap:0.5rem}.exp-meta-n{display:none}
@@ -371,6 +370,27 @@ footer{
   .ct-inner{grid-template-columns:1fr;gap:3rem}
   .stats-strip{flex-wrap:wrap}.stat-box{flex:1 1 40%;border-right:none;border-bottom:1px solid var(--border)}
   footer{flex-direction:column;gap:0.5rem;text-align:center;padding:1.5rem}
+
+  /* HUD mobile */
+  .hud-nav{padding:0.6rem 1rem}
+  .nav-links{display:none}
+  .nav-lap{font-size:0.55rem}
+
+  .hud-dash{
+    grid-template-columns:1fr auto;
+    gap:0.75rem;
+    padding:0.6rem 1rem;
+  }
+  .hud-gear-box{display:none}
+  .hud-ticks{display:none}
+  .hud-rpm-labels{display:none}
+  .hud-rpm-top{margin-bottom:4px}
+  .hud-rpm-num{font-size:1rem}
+  .hud-driver-name{font-size:0.8rem}
+  .hud-driver-role{font-size:0.5rem}
+
+  /* hide sticky mini widget on mobile — HUD already visible */
+  #sticky-gauge{display:none}
 }
 </style>
 </head>
@@ -580,11 +600,11 @@ footer{
     <div>
       <h2 class="ct-title reveal">LET'S BUILD<br />SOMETHING<br /><span class="red">TOGETHER.</span></h2>
       <p class="ct-sub reveal">Open to roles in sales operations, demand planning, supply chain analytics, and data strategy across automotive, FMCG, and distribution.</p>
-      <a href="mailto:hello@abdullahsiyadh.com" class="btn-red reveal" style="width:fit-content">Send Message →</a>
+      <a href="/cdn-cgi/l/email-protection#274f424b4b4867464543524b4b464f544e5e46434f0944484a" class="btn-red reveal" style="width:fit-content">Send Message →</a>
     </div>
     <div class="ct-links reveal">
-      <a href="mailto:hello@abdullahsiyadh.com" class="ct-link">
-        <div class="ct-link-info"><span class="ct-link-label">Email</span><span class="ct-link-val">hello@abdullahsiyadh.com</span></div>
+      <a href="/cdn-cgi/l/email-protection#92faf7fefefdd2f3f0f6e7fefef3fae1fbebf3f6fabcf1fdff" class="ct-link">
+        <div class="ct-link-info"><span class="ct-link-label">Email</span><span class="ct-link-val"><span class="__cf_email__" data-cfemail="5a323f3636351a3b383e2f36363b322933233b3e3274393537">[email&#160;protected]</span></span></div>
         <span class="ct-arrow">↗</span>
       </a>
       <a href="https://linkedin.com/in/abdullahsiyadh" target="_blank" class="ct-link">
@@ -606,7 +626,7 @@ footer{
   <div class="f-right"><div class="f-dot"></div>OPEN TO OPPORTUNITIES</div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── LOADER ──
 window.addEventListener('load', () => {
   setTimeout(() => {
@@ -876,11 +896,4 @@ function updateStickyGauge(){
 }
 updateStickyGauge();
 
-// ── SCROLL REVEAL ──
-const obs = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); obs.unobserve(e.target); } });
-},{threshold:0.08});
-document.querySelectorAll('.reveal,.reveal-l').forEach(el=>obs.observe(el));
-</script>
-</body>
-</html>
+// ──
