@@ -1,586 +1,901 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Abdullah Siyadh — Data & Supply Chain</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abdullah Siyadh — Business Analyst · Automotive Data & Supply Chain</title>
+<meta name="description" content="Abdullah Siyadh — Business Analyst at Dubizzle Cars, Dubai. Sales analytics, S&OP and supply-chain data across automotive and logistics in the UAE and MENA.">
+<meta name="theme-color" content="#07070b">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://abdullahsiyadh.com">
+<meta property="og:title" content="Abdullah Siyadh — Automotive Data & Supply Chain">
+<meta property="og:description" content="I turn complex automotive data into decisions that move inventory, reduce variance and sharpen dealer performance.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23E8002D'/%3E%3Ctext x='32' y='41' font-family='Arial,Helvetica,sans-serif' font-size='25' font-weight='700' fill='white' text-anchor='middle'%3EAS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js')</script>
 <style>
+/* ───────────────── TOKENS ───────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#030305;--bg2:#07070D;--bg3:#0D0D18;
-  --red:#E8002D;--red2:#FF1E00;--red-dim:rgba(232,0,45,0.15);
-  --amber:#F5A623;--teal:#00D2BE;
-  --border:rgba(255,255,255,0.06);--border-red:rgba(232,0,45,0.3);
-  --text:#F0EEF8;--text-muted:#6A6880;--text-dim:#1A1A28;
-  --grad:linear-gradient(90deg,#E8002D,#F5A623);
+  color-scheme:dark;
+  --bg:#07070b;
+  --text:#f5f3f8;
+  --muted:rgba(245,243,248,.66);
+  --faint:rgba(245,243,248,.42);
+  --line:rgba(255,255,255,.08);
+  --stroke:rgba(255,255,255,.1);
+  --accent:#e8002d;
+  --accent-ink:#ff5a74;
+  --amber:#f5a623;
+  --ok:#34d399;
+  --glass:rgba(255,255,255,.03);
+  --glass-2:rgba(255,255,255,.075);
+  --glass-border:rgba(255,255,255,.1);
+  --glass-hi:rgba(255,255,255,.14);
+  --ring:0 0 0 0 transparent;
+  --chip:rgba(255,255,255,.05);
+  --chip-border:rgba(255,255,255,.09);
+  --shadow:0 30px 60px -30px rgba(0,0,0,.8);
+  --spot:rgba(255,255,255,.055);
+  --spot-edge:rgba(255,90,116,.6);
+  --blob-a:#e8002d;--blob-b:#f5a623;--blob-c:#7a0f3a;--blob-d:#ff5a36;
+  --blob-op:.42;
+  --grid:rgba(255,255,255,.035);
+  --grad-text:linear-gradient(100deg,#ff4d6a 5%,#ff7a45 55%,#f5a623 100%);
+  --radius:22px;
+  --maxw:1160px;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --font:'Geist',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
-html{scroll-behavior:smooth}
-body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px)}
-#track-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.3}
+:root[data-theme="light"]{
+  color-scheme:light;
+  --bg:#f6f3f1;--text:#16131b;--muted:rgba(22,19,27,.68);--faint:rgba(22,19,27,.46);
+  --line:rgba(22,19,27,.08);--stroke:rgba(22,19,27,.1);--accent-ink:#c9002a;
+  --glass:rgba(255,255,255,.4);--glass-2:rgba(255,255,255,.66);--glass-border:rgba(255,255,255,.8);--glass-hi:rgba(255,255,255,.95);
+  --ring:0 0 0 1px rgba(22,19,27,.05);
+  --chip:rgba(255,255,255,.55);--chip-border:rgba(22,19,27,.08);
+  --shadow:0 30px 50px -32px rgba(90,20,35,.35);
+  --spot:rgba(255,255,255,.55);--spot-edge:rgba(232,0,45,.45);
+  --blob-a:#ff5c7a;--blob-b:#ffc46b;--blob-c:#ffb0c0;--blob-d:#ff8a5c;--blob-op:.5;
+  --grid:rgba(22,19,27,.045);
+  --grad-text:linear-gradient(100deg,#e8002d 5%,#f0441f 55%,#d98200 100%);
+}
+@media (prefers-color-scheme:light){
+  :root:not([data-theme="dark"]){
+    color-scheme:light;
+    --bg:#f6f3f1;--text:#16131b;--muted:rgba(22,19,27,.68);--faint:rgba(22,19,27,.46);
+    --line:rgba(22,19,27,.08);--stroke:rgba(22,19,27,.1);--accent-ink:#c9002a;
+    --glass:rgba(255,255,255,.4);--glass-2:rgba(255,255,255,.66);--glass-border:rgba(255,255,255,.8);--glass-hi:rgba(255,255,255,.95);
+    --ring:0 0 0 1px rgba(22,19,27,.05);
+    --chip:rgba(255,255,255,.55);--chip-border:rgba(22,19,27,.08);
+    --shadow:0 30px 50px -32px rgba(90,20,35,.35);
+    --spot:rgba(255,255,255,.55);--spot-edge:rgba(232,0,45,.45);
+    --blob-a:#ff5c7a;--blob-b:#ffc46b;--blob-c:#ffb0c0;--blob-d:#ff8a5c;--blob-op:.5;
+    --grid:rgba(22,19,27,.045);
+    --grad-text:linear-gradient(100deg,#e8002d 5%,#f0441f 55%,#d98200 100%);
+  }
+}
 
-/* ── FIXED HUD ── */
-#hud{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(3,3,5,0.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-.hud-nav{display:flex;justify-content:space-between;align-items:center;padding:0.7rem 3rem;border-bottom:1px solid var(--border)}
-.nav-logo{display:flex;align-items:center;gap:0.6rem;text-decoration:none}
-.nav-logo-mark{width:26px;height:26px;background:var(--red);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:0.48rem;font-weight:900;color:#fff}
-.nav-logo-text{font-family:'Orbitron',monospace;font-size:0.7rem;font-weight:700;color:var(--text);letter-spacing:0.15em}
-.nav-logo-text span{color:var(--red)}
-.nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
-.nav-links a{font-family:'Share Tech Mono',monospace;font-size:0.63rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
-.nav-links a:hover{color:var(--red)}
-.nav-lap{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--teal);letter-spacing:0.1em;display:flex;align-items:center;gap:0.4rem}
-.nav-lap::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--teal);animation:blink 1.5s ease-in-out infinite}
+/* ───────────────── BASE ───────────────── */
+html{scroll-behavior:smooth;scroll-padding-top:96px;-webkit-text-size-adjust:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background-color .4s,color .4s}
+::selection{background:rgba(232,0,45,.35);color:#fff}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent-ink);outline-offset:3px}
+.ico{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.mono{font-family:var(--mono)}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
-/* HUD dash strip */
-.hud-dash{display:grid;grid-template-columns:240px 1fr 100px;align-items:center;gap:2rem;padding:0.8rem 3rem}
-.hud-driver{display:flex;flex-direction:column;gap:0.1rem}
-.hud-driver-name{font-family:'Orbitron',monospace;font-size:1rem;font-weight:900;color:var(--text);letter-spacing:-0.01em;line-height:1}
-.hud-driver-name span{color:var(--red)}
-.hud-driver-role{font-family:'Share Tech Mono',monospace;font-size:0.55rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase}
-.hud-rpm{display:flex;flex-direction:column;gap:3px;width:100%;min-width:0}
-.hud-rpm-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
-.hud-rpm-num{font-family:'Orbitron',monospace;font-size:1.5rem;font-weight:900;color:var(--text);letter-spacing:-0.02em;line-height:1;transition:color 0.12s}
-.hud-rpm-num.redline{color:var(--red);text-shadow:0 0 14px rgba(232,0,45,0.6)}
-.hud-rpm-label{font-family:'Share Tech Mono',monospace;font-size:0.52rem;color:var(--text-muted);letter-spacing:0.12em}
-.hud-ticks{display:flex;align-items:flex-end;gap:2px;height:24px;margin-bottom:3px}
-.hud-tick{flex:1;background:rgba(255,255,255,0.07);border-radius:1px;min-height:3px;transition:background 0.07s}
-.hud-tick.lit-normal{background:var(--teal)}
-.hud-tick.lit-mid{background:var(--amber)}
-.hud-tick.lit-red{background:var(--red);box-shadow:0 0 3px var(--red)}
-.hud-track-wrap{position:relative;height:5px;background:rgba(255,255,255,0.05);border-radius:1px}
-.hud-track-fill{height:100%;width:0%;border-radius:1px;background:linear-gradient(90deg,#00D2BE,#F5A623 60%,#E8002D);position:relative}
-.hud-needle{position:absolute;right:-2px;top:50%;transform:translateY(-50%);width:2px;height:20px;background:#fff;border-radius:2px;box-shadow:0 0 6px #fff}
-.hud-redzone{position:absolute;right:0;top:0;bottom:0;width:16.7%;background:rgba(232,0,45,0.07);border-left:1px solid rgba(232,0,45,0.3);pointer-events:none}
-.hud-rpm-labels{display:flex;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:0.48rem;color:rgba(255,255,255,0.14);margin-top:2px}
-.hud-rpm-labels span:last-child{color:rgba(232,0,45,0.45)}
-.hud-gear-box{display:flex;flex-direction:column;align-items:center;border:1px solid var(--border-red);padding:0.45rem 0.7rem;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px))}
-.hud-gear-num{font-family:'Orbitron',monospace;font-size:1.8rem;font-weight:900;color:var(--red);line-height:1}
-.hud-gear-label{font-family:'Share Tech Mono',monospace;font-size:0.48rem;color:var(--text-muted);letter-spacing:0.12em;text-transform:uppercase}
+/* ───────────────── BACKGROUND ───────────────── */
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:var(--blob-op);will-change:transform;transition:background-color .6s}
+.b1{width:46vmax;height:46vmax;left:-14vmax;top:-16vmax;background:var(--blob-a);animation:f1 26s ease-in-out infinite alternate}
+.b2{width:40vmax;height:40vmax;right:-14vmax;top:8vh;background:var(--blob-c);animation:f2 32s ease-in-out infinite alternate}
+.b3{width:34vmax;height:34vmax;left:28vw;bottom:-22vmax;background:var(--blob-b);opacity:calc(var(--blob-op)*.65);animation:f3 36s ease-in-out infinite alternate}
+.b4{width:20vmax;height:20vmax;right:22vw;bottom:14vh;background:var(--blob-d);opacity:calc(var(--blob-op)*.55);animation:f1 28s ease-in-out infinite alternate-reverse}
+.grid{position:absolute;inset:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:72px 72px;-webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 18%,#000 25%,transparent 75%);mask-image:radial-gradient(ellipse 80% 60% at 50% 18%,#000 25%,transparent 75%)}
+.noise{position:absolute;inset:0;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.glow{position:absolute;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;background:radial-gradient(circle,rgba(232,0,45,.2),transparent 62%);opacity:0;transition:opacity .6s;will-change:transform}
+.glow.on{opacity:1}
+@keyframes f1{to{transform:translate(8vw,7vh) scale(1.12)}}
+@keyframes f2{to{transform:translate(-10vw,14vh) scale(.9)}}
+@keyframes f3{to{transform:translate(-12vw,-9vh) scale(1.1)}}
 
-#content{margin-top:0}
+/* scroll progress */
+.progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:100;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--accent),var(--amber))}
+
+/* ───────────────── GLASS ───────────────── */
+.glass{
+  position:relative;isolation:isolate;
+  background:linear-gradient(180deg,var(--glass-2),var(--glass));
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius);
+  -webkit-backdrop-filter:blur(22px) saturate(160%);
+  backdrop-filter:blur(22px) saturate(160%);
+  box-shadow:inset 0 1px 0 var(--glass-hi),var(--ring),var(--shadow);
+}
+.spot::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;background:radial-gradient(460px circle at var(--mx,50%) var(--my,50%),var(--spot),transparent 45%);opacity:0;transition:opacity .35s}
+.spot::before{content:'';position:absolute;inset:-1px;border-radius:inherit;padding:1px;pointer-events:none;background:radial-gradient(280px circle at var(--mx,50%) var(--my,50%),var(--spot-edge),transparent 60%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .35s}
+.spot:hover::after,.spot:hover::before{opacity:1}
+
+/* ───────────────── BUTTONS ───────────────── */
+.btn{display:inline-flex;align-items:center;gap:9px;padding:12px 20px;border-radius:999px;font-weight:500;font-size:.95rem;text-decoration:none;cursor:pointer;border:1px solid transparent;white-space:nowrap;transition:transform .25s var(--ease),box-shadow .25s,background .25s,border-color .25s}
+.btn .ico{width:16px;height:16px;transition:transform .25s var(--ease)}
+.btn-primary{background:linear-gradient(180deg,#ff1f47,#e8002d);color:#fff;box-shadow:0 12px 30px -12px rgba(232,0,45,.85),inset 0 1px 0 rgba(255,255,255,.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 18px 38px -12px rgba(232,0,45,.9),inset 0 1px 0 rgba(255,255,255,.3)}
+.btn-primary:hover .ico{transform:translateX(3px)}
+.btn-glass{background:var(--glass-2);border-color:var(--glass-border);color:var(--text);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:inset 0 1px 0 var(--glass-hi),var(--ring)}
+.btn-glass:hover{transform:translateY(-2px);border-color:rgba(255,90,116,.4)}
+.btn-sm{padding:9px 16px;font-size:.88rem}
+.icon-btn{width:40px;height:40px;border-radius:999px;display:grid;place-items:center;background:var(--chip);border:1px solid var(--chip-border);color:var(--text);cursor:pointer;text-decoration:none;transition:transform .25s var(--ease),background .25s,border-color .25s}
+.icon-btn:hover{transform:translateY(-1px);background:var(--glass-2);border-color:rgba(255,90,116,.35)}
+
+/* ───────────────── NAV ───────────────── */
+.nav-wrap{position:fixed;top:14px;left:0;right:0;z-index:90;padding:0 16px;pointer-events:none}
+.nav{pointer-events:auto;display:flex;align-items:center;gap:10px;max-width:var(--maxw);margin:0 auto;padding:7px 7px 7px 10px;border-radius:999px;-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;letter-spacing:-.01em;font-size:.98rem}
+.mark{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;color:#fff;font-size:.78rem;font-weight:700;letter-spacing:.02em;background:linear-gradient(135deg,#ff3355,#e8002d 55%,#b0001d);box-shadow:0 8px 20px -8px rgba(232,0,45,.8),inset 0 1px 0 rgba(255,255,255,.35)}
+.links{position:relative;display:flex;gap:2px;list-style:none;margin:0 auto}
+.links a{position:relative;z-index:1;display:block;padding:8px 15px;border-radius:999px;color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500;transition:color .25s}
+.links a:hover,.links a.active{color:var(--text)}
+.links .ind{position:absolute;top:0;bottom:0;left:0;width:0;border-radius:999px;background:var(--glass-2);border:1px solid var(--glass-border);box-shadow:inset 0 1px 0 var(--glass-hi);opacity:0;transition:transform .45s var(--ease),width .45s var(--ease),opacity .3s}
+.nav-actions{display:flex;align-items:center;gap:6px}
+.menu-btn{display:none}
+.mobile-menu{position:fixed;top:78px;left:16px;right:16px;z-index:89;padding:8px;border-radius:24px;display:none;flex-direction:column;gap:2px;opacity:0;transform:translateY(-8px) scale(.98);pointer-events:none;transition:opacity .3s var(--ease),transform .3s var(--ease)}
+.mobile-menu.open{opacity:1;transform:none;pointer-events:auto}
+.mobile-menu.glass{background:color-mix(in srgb,var(--bg) 82%,transparent)}
+.mobile-menu a{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:16px;text-decoration:none;font-weight:500}
+.mobile-menu a .ico{color:var(--faint)}
+.mobile-menu a.active,.mobile-menu a:hover{background:var(--chip)}
+
+/* ───────────────── SECTIONS ───────────────── */
+section{padding:110px 0 10px}
+.sec-head{display:flex;flex-direction:column;gap:14px;margin-bottom:40px;max-width:900px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)}
+.eyebrow::before{content:'';width:22px;height:1px;background:currentColor}
+h2{font-size:clamp(2rem,4.4vw,3.2rem);line-height:1.05;letter-spacing:-.035em;font-weight:600}
+.soft{color:var(--faint)}
+.grad{background:var(--grad-text);-webkit-background-clip:text;background-clip:text;color:transparent}
 
 /* HERO */
-.hero{padding:3rem 3rem 3rem;position:relative;z-index:1}
-.telem-bar{display:flex;gap:2rem;align-items:center;margin-bottom:2rem;font-family:'Share Tech Mono',monospace;font-size:0.63rem;color:var(--text-muted);letter-spacing:0.12em;opacity:0;animation:fadeUp 0.5s ease 0.3s forwards}
-.telem-item{display:flex;flex-direction:column;gap:0.2rem}
-.telem-val{color:var(--teal);font-size:0.9rem}
-.telem-sep{width:1px;height:28px;background:var(--border)}
-.hero-driver{font-family:'Share Tech Mono',monospace;font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--red);margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem;opacity:0;animation:fadeUp 0.5s ease 0.1s forwards}
-.hero-driver::before{content:'';width:18px;height:2px;background:var(--red)}
-.hero-name{font-family:'Orbitron',monospace;font-size:clamp(2rem,6vw,5rem);font-weight:900;line-height:0.9;letter-spacing:-0.02em;max-width:640px;opacity:0;animation:fadeUp 0.6s ease 0.2s forwards}
-.hero-name .red{color:var(--red)}
-.hero-name .line2{display:block;font-size:0.5em;font-weight:400;letter-spacing:0.1em;color:var(--text-muted);margin-top:0.6rem;font-family:'Rajdhani',sans-serif}
-.hero-divider{width:100%;height:1px;background:linear-gradient(90deg,var(--red),transparent);margin:1.5rem 0;max-width:460px;opacity:0;animation:expandW 0.6s ease 0.4s forwards}
-.hero-desc{max-width:520px;font-size:1rem;font-weight:400;color:var(--text-muted);line-height:1.75;margin-bottom:2rem;opacity:0;animation:fadeUp 0.5s ease 0.5s forwards}
-.hero-desc strong{color:var(--text);font-weight:600}
-.hero-cta{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:fadeUp 0.5s ease 0.6s forwards}
-.btn-red{display:inline-flex;align-items:center;gap:0.5rem;padding:0.8rem 1.75rem;background:var(--red);color:#fff;font-family:'Orbitron',monospace;font-size:0.63rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:background 0.2s,transform 0.15s}
-.btn-red:hover{background:var(--red2);transform:translateY(-2px)}
-.btn-outline{display:inline-flex;align-items:center;gap:0.5rem;padding:0.8rem 1.75rem;border:1px solid var(--border-red);color:var(--red);font-family:'Orbitron',monospace;font-size:0.63rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));transition:background 0.2s,transform 0.15s}
-.btn-outline:hover{background:var(--red-dim);transform:translateY(-2px)}
-.stats-strip{display:flex;gap:0;margin-top:3rem;border:1px solid var(--border);opacity:0;animation:fadeUp 0.5s ease 0.7s forwards;overflow:hidden}
-.stat-box{flex:1;padding:1.25rem;border-right:1px solid var(--border);position:relative;transition:background 0.2s}
-.stat-box:last-child{border-right:none}
-.stat-box:hover{background:rgba(232,0,45,0.05)}
-.stat-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform 0.4s}
-.stat-box:hover::before{transform:scaleX(1)}
-.stat-n{font-family:'Orbitron',monospace;font-size:1.6rem;font-weight:900;color:var(--red);line-height:1;margin-bottom:0.25rem}
-.stat-l{font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase}
+.hero-grid>*,.about-grid>*,.exp>*,.contact>*{min-width:0}
+.hero{padding-top:150px}
+.hero-grid{display:grid;grid-template-columns:1.25fr .85fr;gap:56px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:10px;padding:7px 14px 7px 12px;border-radius:999px;font-size:.84rem;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);animation:pulse 2.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(52,211,153,.55)}70%{box-shadow:0 0 0 9px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
+h1{font-size:clamp(2.9rem,7.4vw,5.9rem);line-height:.96;letter-spacing:-.05em;font-weight:600;margin:24px 0 18px}
+.tagline{font-size:clamp(1.05rem,1.7vw,1.3rem);font-weight:500;letter-spacing:-.01em;margin-bottom:14px}
+.lead{max-width:560px;color:var(--muted);font-size:1.06rem;line-height:1.75}
+.lead strong{color:var(--text);font-weight:500}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
 
-/* SECTIONS */
-section{padding:5rem 3rem;position:relative;z-index:1}
-.sec-head{display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem}
-.sec-tag{font-family:'Share Tech Mono',monospace;font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--red)}
-.sec-tag-line{flex:1;height:1px;background:linear-gradient(90deg,var(--red),transparent)}
-.sec-title{font-family:'Orbitron',monospace;font-size:clamp(1.5rem,3.5vw,2.6rem);font-weight:900;letter-spacing:-0.02em;line-height:1.05;margin-bottom:3rem}
-.sec-title .teal{color:var(--teal)}
-.sec-title .amber{color:var(--amber)}
+.profile{padding:24px;border-radius:28px;transition:transform .6s var(--ease)}
+.profile.tilting{transition:transform .12s linear}
+.pc-top{display:flex;align-items:center;gap:14px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.avatar{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;flex:none;font-weight:700;font-size:1.1rem;color:#fff;background:linear-gradient(135deg,#ff3355,#e8002d 55%,#9e001b);box-shadow:0 14px 30px -12px rgba(232,0,45,.8),inset 0 1px 0 rgba(255,255,255,.35)}
+.pc-name{font-weight:600;font-size:1.08rem;letter-spacing:-.01em;line-height:1.3}
+.pc-role{color:var(--muted);font-size:.9rem}
+.pc-rows{padding:8px 0 16px}
+.pc-row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 0;border-bottom:1px dashed var(--line);font-size:.93rem}
+.pc-row:last-child{border-bottom:0}
+.pc-row .k{color:var(--faint);font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
+.pc-row .v{font-weight:500;text-align:right}
+.pc-row .v.mono{font-size:.88rem;font-variant-numeric:tabular-nums}
+.pc-actions{display:flex;gap:8px}
+.pc-actions .btn{flex:1;justify-content:center}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:64px}
+.stat{padding:22px 22px 20px}
+.stat-k{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.stat-n{font-size:clamp(2.1rem,3.6vw,2.7rem);font-weight:600;letter-spacing:-.045em;line-height:1;margin-top:14px;font-variant-numeric:tabular-nums}
+.stat-n .suf{color:var(--accent-ink)}
+.stat-l{margin-top:10px;color:var(--muted);font-size:.9rem;line-height:1.45}
+
+.marquee{margin-top:14px;padding:12px 0;border-radius:999px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.track{display:flex;width:max-content;animation:scroll 48s linear infinite}
+.marquee:hover .track{animation-play-state:paused}
+.group{display:flex;gap:10px;padding-right:10px;list-style:none}
+.group li{display:flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:var(--chip);border:1px solid var(--chip-border);font-size:.86rem;color:var(--muted);white-space:nowrap;transition:color .2s,border-color .2s}
+.group li:hover{color:var(--text);border-color:rgba(255,90,116,.4)}
+.group li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent-ink)}
+@keyframes scroll{to{transform:translateX(-50%)}}
 
 /* ABOUT */
-.about-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:5rem;align-items:start;border-top:1px solid var(--border);padding-top:3rem}
-.about-text p{color:var(--text-muted);font-size:1rem;margin-bottom:1.1rem;line-height:1.8}
-.about-text p strong{color:var(--text);font-weight:600}
-.data-cards{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
-.dcard{background:var(--bg2);padding:1.5rem;position:relative;overflow:hidden;transition:background 0.3s}
-.dcard:hover{background:var(--bg3)}
-.dcard::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform 0.4s}
-.dcard:hover::after{transform:scaleX(1)}
-.dcard-n{font-family:'Orbitron',monospace;font-size:2rem;font-weight:900;color:var(--red);line-height:1;margin-bottom:0.35rem}
-.dcard-l{font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--text-muted);letter-spacing:0.1em;text-transform:uppercase;line-height:1.5}
+.about-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
+.about-card{padding:36px}
+.about-card p{color:var(--muted);font-size:1.04rem;line-height:1.8}
+.about-card p+p{margin-top:16px}
+.about-card strong{color:var(--text);font-weight:500}
+.about-card .btn{margin-top:28px}
+.focus{display:grid;gap:16px}
+.f-item{padding:22px;display:grid;grid-template-columns:46px 1fr;gap:16px;align-items:start}
+.f-ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;color:var(--accent-ink);background:linear-gradient(135deg,rgba(232,0,45,.2),rgba(245,166,35,.1));border:1px solid rgba(255,90,116,.25)}
+.f-ic .ico{width:20px;height:20px}
+.f-item h3{font-size:1.02rem;font-weight:600;letter-spacing:-.01em;margin:2px 0 4px}
+.f-item p{color:var(--muted);font-size:.93rem;line-height:1.6}
 
 /* EXPERIENCE */
-.exp-wrap{border-top:1px solid var(--border)}
-.exp-row{display:grid;grid-template-columns:180px 1fr;gap:3rem;padding:2.5rem 0;border-bottom:1px solid var(--border);position:relative;transition:background 0.2s}
-.exp-row:hover{background:rgba(232,0,45,0.02)}
-.exp-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--grad);transform:scaleY(0);transform-origin:top;transition:transform 0.5s}
-.exp-row:hover::before{transform:scaleY(1)}
-.exp-meta-date{font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:var(--teal);letter-spacing:0.08em;margin-bottom:0.3rem}
-.exp-meta-co{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em}
-.exp-meta-n{font-family:'Orbitron',monospace;font-size:2.2rem;font-weight:900;color:var(--text-dim);line-height:1;margin-top:0.75rem}
-.exp-r{font-family:'Orbitron',monospace;font-size:1.2rem;font-weight:700;color:var(--text);margin-bottom:0.75rem;line-height:1.2;letter-spacing:-0.01em}
-.exp-d{font-size:0.93rem;color:var(--text-muted);line-height:1.8;margin-bottom:1rem}
-.tags{display:flex;flex-wrap:wrap;gap:0.35rem}
-.tag{padding:0.2rem 0.6rem;background:var(--bg3);border:1px solid var(--border);font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--text-muted);letter-spacing:0.05em;clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px));transition:border-color 0.2s,color 0.2s}
-.tag:hover{border-color:var(--red);color:var(--red)}
+.exp{display:grid;grid-template-columns:290px 1fr;gap:8px;padding:8px;border-radius:30px}
+.tabs{position:relative;display:flex;flex-direction:column;gap:2px;padding:6px}
+.tab{position:relative;z-index:1;text-align:left;background:none;border:0;padding:15px 16px 15px 22px;border-radius:18px;cursor:pointer;color:var(--muted);transition:color .25s}
+.tab:hover,.tab[aria-selected="true"]{color:var(--text)}
+.t-co{display:block;font-weight:600;font-size:.98rem;letter-spacing:-.01em}
+.t-ro{display:block;font-size:.8rem;color:var(--faint);margin-top:2px}
+.tab-ind{position:absolute;left:0;top:0;width:0;height:0;border-radius:18px;background:var(--glass-2);border:1px solid var(--glass-border);box-shadow:inset 0 1px 0 var(--glass-hi),var(--ring)}
+.tab-ind.ready{transition:transform .5s var(--ease),width .5s var(--ease),height .5s var(--ease)}
+.tab-ind::before{content:'';position:absolute;left:9px;top:16px;bottom:16px;width:3px;border-radius:3px;background:linear-gradient(var(--accent),var(--amber))}
+.panels{position:relative;display:flex;flex-direction:column;min-height:480px;padding:32px 34px 22px;border-radius:22px;background:var(--chip);border:1px solid var(--chip-border);overflow:hidden}
+.panel{flex:1;position:relative}
+.panel[hidden]{display:none}
+.js .panel{animation:panelIn .55s var(--ease)}
+@keyframes panelIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.p-idx{position:absolute;right:-4px;top:-14px;font-size:5.4rem;font-weight:600;letter-spacing:-.06em;line-height:1;color:transparent;-webkit-text-stroke:1px var(--stroke);pointer-events:none;user-select:none}
+.p-meta{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-family:var(--mono);font-size:.76rem;color:var(--faint);letter-spacing:.06em;text-transform:uppercase}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;background:rgba(52,211,153,.12);color:var(--ok);border:1px solid rgba(52,211,153,.28);font-size:.68rem;letter-spacing:.08em}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.panel h3{font-size:clamp(1.45rem,2.5vw,1.95rem);letter-spacing:-.03em;font-weight:600;line-height:1.15;margin:14px 0 4px;max-width:85%}
+.p-co{color:var(--accent-ink);font-weight:500;margin-bottom:18px}
+.panel p{color:var(--muted);line-height:1.8;max-width:640px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;list-style:none}
+.tags li{padding:6px 12px;border-radius:999px;background:var(--chip);border:1px solid var(--chip-border);font-size:.82rem;color:var(--muted);transition:color .2s,border-color .2s,transform .2s}
+.tags li:hover{color:var(--text);border-color:rgba(255,90,116,.45);transform:translateY(-1px)}
+.p-foot{display:flex;justify-content:space-between;align-items:center;margin-top:28px;padding-top:16px;border-top:1px solid var(--line)}
+.p-count{font-family:var(--mono);font-size:.8rem;color:var(--faint);letter-spacing:.08em;font-variant-numeric:tabular-nums}
+.p-btns{display:flex;gap:6px}
+.p-hint{font-size:.8rem;color:var(--faint)}
 
 /* SKILLS */
-.skills-wrap{border-top:1px solid var(--border)}
-.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
-.sk{background:var(--bg2);padding:2rem;position:relative;overflow:hidden;transition:background 0.3s}
-.sk:hover{background:var(--bg3)}
-.sk::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--grad);transform:scaleY(0);transform-origin:bottom;transition:transform 0.4s}
-.sk:hover::before{transform:scaleY(1)}
-.sk-head{font-family:'Share Tech Mono',monospace;font-size:0.58rem;color:var(--red);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:0.9rem;display:flex;align-items:center;gap:0.5rem}
-.sk-head::before{content:'';width:10px;height:1px;background:var(--red)}
-.sk h3{font-family:'Orbitron',monospace;font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:1.1rem;letter-spacing:0.02em}
-.sk-list{list-style:none}
-.sk-list li{font-size:0.9rem;color:var(--text-muted);padding:0.38rem 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.5rem;transition:color 0.2s}
-.sk-list li:last-child{border-bottom:none}
-.sk-list li:hover{color:var(--text)}
-.sk-list li::before{content:'›';color:var(--red);font-size:1rem;line-height:1}
+.skills{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.sk{padding:28px}
+.sk-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.sk-k{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.sk h3{font-size:1.22rem;font-weight:600;letter-spacing:-.02em;margin-bottom:14px}
+.sk ul{list-style:none}
+.sk li{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);color:var(--muted);font-size:.95rem;transition:color .2s,transform .25s var(--ease)}
+.sk li:last-child{border-bottom:0}
+.sk li::before{content:'';width:6px;height:6px;border-radius:50%;flex:none;background:var(--accent-ink);opacity:.75;transition:transform .25s var(--ease),opacity .2s}
+.sk li:hover{color:var(--text);transform:translateX(4px)}
+.sk li:hover::before{transform:scale(1.5);opacity:1}
 
 /* CONTACT */
-.contact-wrap{border-top:1px solid var(--border)}
-.ct-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
-.ct-title{font-family:'Orbitron',monospace;font-size:clamp(1.6rem,4vw,3rem);font-weight:900;letter-spacing:-0.02em;line-height:1;margin-bottom:1.1rem}
-.ct-title .red{color:var(--red)}
-.ct-sub{color:var(--text-muted);font-size:0.93rem;margin-bottom:2rem;line-height:1.75}
-.ct-links{display:flex;flex-direction:column}
-.ct-link{display:flex;align-items:center;justify-content:space-between;padding:1rem 0;border-bottom:1px solid var(--border);text-decoration:none;color:var(--text);transition:color 0.2s,padding-left 0.3s}
-.ct-link:hover{color:var(--red);padding-left:0.5rem}
-.ct-link-info{display:flex;flex-direction:column;gap:0.12rem}
-.ct-link-label{font-family:'Share Tech Mono',monospace;font-size:0.56rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-muted)}
-.ct-link-val{font-size:0.92rem;font-weight:500}
-.ct-arrow{font-size:1rem;color:var(--text-dim);transition:color 0.2s,transform 0.2s}
-.ct-link:hover .ct-arrow{color:var(--red);transform:translate(4px,-4px)}
+.contact{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;padding:52px;border-radius:32px;overflow:hidden}
+.c-glow{position:absolute;right:-12%;top:-45%;width:62%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(232,0,45,.28),transparent 65%);z-index:-1;pointer-events:none}
+.c-title{font-size:clamp(2.2rem,5vw,3.9rem);line-height:1;letter-spacing:-.05em;font-weight:600;margin-top:14px}
+.c-sub{color:var(--muted);margin:18px 0 28px;max-width:470px;line-height:1.75}
+.c-btns{display:flex;gap:10px;flex-wrap:wrap}
+.c-links{display:flex;flex-direction:column;gap:10px}
+.c-link{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:18px;background:var(--chip);border:1px solid var(--chip-border);text-decoration:none;transition:transform .3s var(--ease),background .25s,border-color .25s}
+.c-link:hover{transform:translateX(4px);background:var(--glass-2);border-color:rgba(255,90,116,.35)}
+.c-ic{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;flex:none;background:var(--glass-2);border:1px solid var(--glass-border)}
+.c-info{display:flex;flex-direction:column;min-width:0}
+.c-lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.c-val{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.c-arrow{margin-left:auto;color:var(--faint);transition:transform .3s var(--ease),color .25s}
+.c-link:hover .c-arrow{transform:translate(3px,-3px);color:var(--accent-ink)}
 
 /* FOOTER */
-footer{padding:1.5rem 3rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
-.f-left{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--text-muted);letter-spacing:0.08em}
-.f-right{display:flex;align-items:center;gap:0.5rem;font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--teal)}
-.f-dot{width:5px;height:5px;border-radius:50%;background:var(--teal);animation:blink 1.5s ease-in-out infinite}
+footer{margin-top:90px}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:28px 0 40px;border-top:1px solid var(--line);color:var(--faint);font-size:.88rem}
+.foot-l{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.foot-l .sep{opacity:.5}
+
+/* TOAST */
+.toast{position:fixed;left:50%;bottom:28px;width:max-content;max-width:calc(100vw - 32px);z-index:120;display:flex;align-items:center;gap:10px;padding:12px 18px;border-radius:999px;font-size:.92rem;pointer-events:none;opacity:0;transform:translate(-50%,16px);transition:opacity .35s var(--ease),transform .35s var(--ease)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast .ico{color:var(--ok)}
 
 /* REVEAL */
-.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.7s ease,transform 0.7s ease}
-.reveal.on{opacity:1;transform:translateY(0)}
-.reveal-l{opacity:0;transform:translateX(-18px);transition:opacity 0.7s ease,transform 0.7s ease}
-.reveal-l.on{opacity:1;transform:translateX(0)}
+.js .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:var(--d,0s)}
+.js .reveal.in{opacity:1;transform:none}
 
-/* ANIMATIONS */
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes expandW{from{opacity:0;max-width:0}to{opacity:1;max-width:460px}}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
+/* view-transition theme switch */
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
 
-/* ── MOBILE ── */
-@media(max-width:768px){
-  /* HUD — compact 2-col, hide gear box */
-  .hud-nav{padding:0.55rem 1rem}
-  .nav-links{display:none}
-  .nav-lap{font-size:0.52rem}
-  .hud-dash{grid-template-columns:1fr auto;gap:0.6rem;padding:0.55rem 1rem}
-  .hud-gear-box{display:none}
-  .hud-ticks{height:16px}
-  .hud-rpm-labels{display:none}
-  .hud-rpm-num{font-size:1.1rem}
-  .hud-driver-name{font-size:0.75rem}
-  .hud-driver-role{display:none}
-  .hud-rpm-label{font-size:0.48rem}
-
-  /* hero */
-  .hero{padding:2rem 1.25rem 2rem}
-  .telem-bar{gap:1rem;font-size:0.56rem}
-  .telem-val{font-size:0.75rem}
-  .hero-driver{font-size:0.55rem;letter-spacing:0.15em}
-  .hero-desc{font-size:0.95rem}
-  .hero-cta{flex-direction:column}
-  .btn-red,.btn-outline{width:100%;justify-content:center}
-  .stats-strip{flex-wrap:wrap}
-  .stat-box{flex:1 1 45%;border-right:none;border-bottom:1px solid var(--border);padding:1rem}
-  .stat-n{font-size:1.3rem}
-
-  /* sections */
-  section{padding:3rem 1.25rem}
-  .sec-title{margin-bottom:2rem}
-
-  /* about */
-  .about-grid{grid-template-columns:1fr;gap:2rem;padding-top:2rem}
-  .data-cards{grid-template-columns:1fr 1fr}
-  .dcard{padding:1.1rem}
-  .dcard-n{font-size:1.6rem}
-
-  /* experience */
-  .exp-row{grid-template-columns:1fr;gap:0.25rem;padding:2rem 0}
-  .exp-meta-n{display:none}
-  .exp-meta-date,.exp-meta-co{display:inline;margin-right:0.5rem}
-  .exp-meta-co::before{content:' · '}
-  .exp-r{font-size:1rem;margin-top:0.75rem}
-  .exp-d{font-size:0.88rem}
-
-  /* skills */
-  .skills-grid{grid-template-columns:1fr}
-  .sk{padding:1.5rem}
-
-  /* contact */
-  .ct-inner{grid-template-columns:1fr;gap:2rem}
-  .ct-title{font-size:clamp(1.5rem,7vw,2.2rem)}
-
-  /* footer */
-  footer{flex-direction:column;gap:0.5rem;text-align:center;padding:1.25rem}
-
-  /* hide sticky gauge on mobile */
-  #sticky-gauge{display:none!important}
+/* ───────────────── RESPONSIVE ───────────────── */
+@media (max-width:980px){
+  .hero-grid{grid-template-columns:1fr;gap:40px}
+  .profile{max-width:520px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .about-grid{grid-template-columns:1fr}
+  .skills{grid-template-columns:1fr 1fr}
+  .skills .sk:last-child{grid-column:1/-1}
+  .contact{grid-template-columns:1fr;gap:32px;padding:40px}
+  .exp{grid-template-columns:1fr}
+  .tabs{flex-direction:row;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto;padding:12px 16px}
+  .tab-ind::before{left:16px;right:16px;top:auto;bottom:6px;width:auto;height:2px;background:linear-gradient(90deg,var(--accent),var(--amber))}
+  .panels{min-height:0}
 }
-
-@media(max-width:400px){
-  .hud-driver-name{font-size:0.65rem}
-  .hud-rpm-num{font-size:0.95rem}
-  .hero-name{font-size:1.9rem}
+@media (max-width:760px){
+  .links,.nav-cta{display:none}
+  .menu-btn{display:grid}
+  .mobile-menu{display:flex}
+  .nav-actions{margin-left:auto}
+  .container{padding:0 16px}
+  section{padding:84px 0 6px}
+  .hero{padding-top:118px}
+  .sec-head{margin-bottom:28px}
+  .about-card{padding:26px}
+  .skills{grid-template-columns:1fr}
+  .contact{padding:28px 22px;border-radius:26px}
+  .panels{padding:24px 20px 18px}
+  .p-idx{font-size:4rem}
+  .p-hint{display:none}
+  .blob{filter:blur(70px)}
+  .foot{flex-direction:column;align-items:flex-start}
+}
+@media (max-width:420px){
+  .stat{padding:18px 16px}
+  .stat-l{font-size:.84rem}
+  .cta .btn,.c-btns .btn{flex:1;justify-content:center}
+  .pc-actions{flex-wrap:wrap}
+  .contact{padding:26px 18px}
+  .c-link{padding:14px;gap:12px}
+  .c-val{white-space:normal;overflow-wrap:anywhere;font-size:.9rem}
+  .c-arrow,.hide-sm{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+  .js .reveal{opacity:1;transform:none}
+  .marquee{overflow-x:auto}
 }
 </style>
 </head>
 <body>
-<canvas id="track-canvas"></canvas>
 
-<!-- FIXED HUD -->
-<div id="hud">
-  <div class="hud-nav">
-    <a href="#" class="nav-logo">
-      <div class="nav-logo-mark">AS</div>
-      <span class="nav-logo-text">Hello!<span></span>
+<!-- ICON SPRITE -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow-r" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="i-arrow-ur" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></symbol>
+  <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+  <symbol id="i-linkedin" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2m-7.07-17.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="m4 17 6-6-6-6"/><path d="M12 19h8"/></symbol>
+  <symbol id="i-car" viewBox="0 0 24 24"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+</svg>
+
+<!-- BACKGROUND -->
+<div class="bg" aria-hidden="true">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div>
+  <div class="grid"></div>
+  <div class="glow" id="glow"></div>
+  <div class="noise"></div>
+</div>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<!-- NAV -->
+<header class="nav-wrap">
+  <nav class="nav glass" aria-label="Primary">
+    <a href="#top" class="brand" aria-label="Abdullah Siyadh — home">
+      <span class="mark">AS</span><span class="brand-name">Abdullah Siyadh</span>
     </a>
-    <ul class="nav-links">
-      <li><a href="#about">PROFILE</a></li>
-      <li><a href="#experience">CAREER</a></li>
-      <li><a href="#skills">SYSTEMS</a></li>
-      <li><a href="#contact">COMMS</a></li>
+    <ul class="links" id="links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li class="ind" aria-hidden="true"></li>
     </ul>
-    <div class="nav-lap">LIVE · DUBAI, UAE</div>
-  </div>
-  <div class="hud-dash">
-    <div class="hud-driver">
-      <div class="hud-driver-name">ABDULLAH <span>SIYADH</span></div>
-      <div class="hud-driver-role">Data Analyst · Automotive · Sales & Aftersales · Supply Chain · Inventory & Warehousing</div>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="Switch theme"><svg class="ico"><use href="#i-sun"/></svg></button>
+      <a href="#contact" class="btn btn-primary btn-sm nav-cta">Get in touch</a>
+      <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu"><svg class="ico"><use href="#i-menu"/></svg></button>
     </div>
-    <div class="hud-rpm">
-      <div class="hud-rpm-top">
-        <div>
-          <span class="hud-rpm-num" id="hud-rpm-num">00800</span>
-          <span class="hud-rpm-label"> RPM</span>
-        </div>
-        <span class="hud-rpm-label" id="hud-speed">009 KM/H</span>
-      </div>
-      <div class="hud-ticks" id="hud-ticks"></div>
-      <div class="hud-track-wrap">
-        <div class="hud-redzone"></div>
-        <div class="hud-track-fill" id="hud-fill"><div class="hud-needle"></div></div>
-      </div>
-      <div class="hud-rpm-labels">
-        <span>0</span><span>2</span><span>4</span><span>6</span><span>8</span><span>10</span><span>12</span><span>14</span><span>16</span><span>18k</span>
-      </div>
-    </div>
-    <div class="hud-gear-box">
-      <div class="hud-gear-num" id="hud-gear">P</div>
-      <div class="hud-gear-label">Gear</div>
-    </div>
-  </div>
+  </nav>
+</header>
+<div class="mobile-menu glass" id="mobileMenu" inert>
+  <a href="#about">About <svg class="ico"><use href="#i-arrow-r"/></svg></a>
+  <a href="#experience">Experience <svg class="ico"><use href="#i-arrow-r"/></svg></a>
+  <a href="#skills">Skills <svg class="ico"><use href="#i-arrow-r"/></svg></a>
+  <a href="#contact">Contact <svg class="ico"><use href="#i-arrow-r"/></svg></a>
 </div>
 
-<div id="content">
+<main id="top">
 
 <!-- HERO -->
-<section class="hero" id="home">
-  <div class="telem-bar">
-    <div class="telem-item"><div class="telem-val">DXB</div><div>CIRCUIT</div></div>
-    <div class="telem-sep"></div>
-    <div class="telem-item"><div class="telem-val">1:24.3</div><div>BEST LAP</div></div>
-    <div class="telem-sep"></div>
-    <div class="telem-item"><div class="telem-val" id="t-speed">009</div><div>KM/H</div></div>
-  </div>
-  <div class="hero-driver">AUTOMOTIVE · DATA ANALYST · SUPPLY CHAIN</div>
-  <h1 class="hero-name">
-    ABDULLAH <span class="red">SIYADH</span>
-    <span class="line2">Automotive Data & Supply Chain Specialist</span>
-  </h1>
-  <div class="hero-divider"></div>
-  <p class="hero-desc">I turn <strong>complex automotive data</strong> into decisions that move inventory, reduce variance, and sharpen dealer performance. 4+ years racing through the UAE and MENA supply chain at full throttle.</p>
-  <div class="hero-cta">
-    <a href="#experience" class="btn-red">View Career →</a>
-    <a href="#contact" class="btn-outline">Open Comms</a>
-  </div>
-  <div class="stats-strip">
-    <div class="stat-box"><div class="stat-n">4+</div><div class="stat-l">Years on Track</div></div>
-    <div class="stat-box"><div class="stat-n">16</div><div class="stat-l">Branches</div></div>
-    <div class="stat-box"><div class="stat-n">5+</div><div class="stat-l">OEM Brands</div></div>
-    <div class="stat-box"><div class="stat-n">MENA</div><div class="stat-l">Distribution Zone</div></div>
+<section class="hero" aria-label="Introduction">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="pill glass reveal"><span class="dot"></span>Open to opportunities · Dubai, UAE</div>
+        <h1 class="reveal" style="--d:.08s">Abdullah<br><span class="grad">Siyadh</span></h1>
+        <p class="tagline reveal" style="--d:.16s">Automotive data &amp; supply chain specialist</p>
+        <p class="lead reveal" style="--d:.22s">I turn <strong>complex automotive data</strong> into decisions that move inventory, reduce variance and sharpen dealer performance — 4+ years across sales, S&amp;OP and supply chain in the UAE and MENA.</p>
+        <div class="cta reveal" style="--d:.3s">
+          <a href="#experience" class="btn btn-primary">View experience <svg class="ico"><use href="#i-arrow-r"/></svg></a>
+          <button type="button" class="btn btn-glass" data-copy-email><svg class="ico"><use href="#i-copy"/></svg><span>Copy email</span></button>
+        </div>
+      </div>
+
+      <div class="reveal" style="--d:.2s">
+        <div class="profile glass spot" id="profile">
+          <div class="pc-top">
+            <div class="avatar" aria-hidden="true">AS</div>
+            <div>
+              <div class="pc-name">Abdullah Siyadh</div>
+              <div class="pc-role">Business Analyst</div>
+            </div>
+          </div>
+          <div class="pc-rows">
+            <div class="pc-row"><span class="k">Currently</span><span class="v">Dubizzle Cars</span></div>
+            <div class="pc-row"><span class="k">Previously</span><span class="v">Al Habtoor · DHL · DSV</span></div>
+            <div class="pc-row"><span class="k">Based in</span><span class="v">Dubai, UAE</span></div>
+            <div class="pc-row"><span class="k">Local time</span><span class="v mono" id="clock">GST (UTC+4)</span></div>
+          </div>
+          <div class="pc-actions">
+            <a class="btn btn-glass btn-sm" href="https://linkedin.com/in/abdullahsiyadh" target="_blank" rel="noopener"><svg class="ico"><use href="#i-linkedin"/></svg>LinkedIn</a>
+            <a class="btn btn-glass btn-sm" href="mailto:hello@abdullahsiyadh.com"><svg class="ico"><use href="#i-mail"/></svg>Email</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat glass spot reveal">
+        <div class="stat-k">Experience</div>
+        <div class="stat-n"><span data-count="4">4</span><span class="suf">+</span></div>
+        <div class="stat-l">Years in automotive &amp; logistics</div>
+      </div>
+      <div class="stat glass spot reveal" style="--d:.06s">
+        <div class="stat-k">Coverage</div>
+        <div class="stat-n"><span data-count="16">16</span></div>
+        <div class="stat-l">UAE branches tracked in one reporting view</div>
+      </div>
+      <div class="stat glass spot reveal" style="--d:.12s">
+        <div class="stat-k">Brands</div>
+        <div class="stat-n"><span data-count="4">4</span></div>
+        <div class="stat-l">OEM brands — MMC, FUSO, JAC, Mercedes-Benz Trucks</div>
+      </div>
+      <div class="stat glass spot reveal" style="--d:.18s">
+        <div class="stat-k">Region</div>
+        <div class="stat-n">MENA</div>
+        <div class="stat-l">Distribution scope, UAE to Africa</div>
+      </div>
+    </div>
+
+    <div class="marquee glass reveal" aria-label="Tools I use">
+      <div class="track">
+        <ul class="group">
+          <li>Python</li><li>pandas</li><li>SQL</li><li>Snowflake</li><li>Power BI</li><li>DAX</li><li>Qlik Sense</li><li>Excel &amp; VBA</li><li>SAP Fiori</li><li>SAP EWM</li><li>Selenium</li><li>Playwright</li><li>Periscope</li><li>WIMS</li><li>DMS</li>
+        </ul>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- ABOUT -->
 <section id="about">
-  <div class="sec-head reveal"><span class="sec-tag">Profile</span><div class="sec-tag-line"></div></div>
-  <h2 class="sec-title reveal">WHERE DATA MEETS<br />THE <span class="teal">AUTOMOTIVE.</span></h2>
-  <div class="about-grid">
-    <div class="about-text reveal-l">
-      <p>I specialise in the intersection of <strong>sales analytics, S&OP, and distribution operations</strong> — built across four years in some of the most demanding automotive and logistics environments in the region.</p>
-      <p>From EWM-driven warehousing under <strong>Mitsubishi FUSO</strong> to fill rate analytics under <strong>Mercedes-Benz Trucks MEA</strong> at DHL, I've always operated where field complexity meets the data layer.</p>
-      <p>At <strong>Al Habtoor Motors</strong>, I lead sales analytics across MMC, FUSO, and JAC — 16 branches, multi-brand KPI reporting, Python automation pipelines, and forecast modelling built from scratch.</p>
-      <br/>
-      <a href="#contact" class="btn-outline" style="width:fit-content">Open Comms →</a>
+  <div class="container">
+    <div class="sec-head">
+      <span class="eyebrow reveal">About</span>
+      <h2 class="reveal" style="--d:.06s">Where data meets <span class="soft">the automotive business.</span></h2>
     </div>
-    <div class="data-cards reveal">
-      <div class="dcard"><div class="dcard-n">4+</div><div class="dcard-l">Years in Automotive & Logistics</div></div>
-      <div class="dcard"><div class="dcard-n">16</div><div class="dcard-l">UAE Branches Tracked</div></div>
-      <div class="dcard"><div class="dcard-n">3</div><div class="dcard-l">OEM Brands Managed</div></div>
-      <div class="dcard"><div class="dcard-n">MENA</div><div class="dcard-l">Distribution Scope</div></div>
+    <div class="about-grid">
+      <div class="about-card glass spot reveal">
+        <p>I work where <strong>sales analytics, S&amp;OP and distribution operations</strong> meet — built over four-plus years in some of the most demanding automotive and logistics environments in the region.</p>
+        <p>From SAP EWM warehousing for <strong>Mitsubishi FUSO</strong> at DSV to fill-rate analytics for <strong>Mercedes-Benz Trucks MEA</strong> at DHL, I've always operated where field complexity meets the data layer.</p>
+        <p>At <strong>Al Habtoor Motors</strong> I led sales analytics across MMC, FUSO and JAC — 16 branches, multi-brand KPI reporting, Python automation and forecast models built from scratch. Today I'm a <strong>Business Analyst at Dubizzle Cars</strong>, turning inventory and customer-operations data into decisions for leadership.</p>
+        <a href="#contact" class="btn btn-glass">Get in touch <svg class="ico"><use href="#i-arrow-r"/></svg></a>
+      </div>
+      <div class="focus">
+        <div class="f-item glass spot reveal" style="--d:.06s">
+          <div class="f-ic"><svg class="ico"><use href="#i-chart"/></svg></div>
+          <div><h3>Sales analytics</h3><p>KPI reporting, variance analysis and forecasting across multi-brand, multi-branch sales.</p></div>
+        </div>
+        <div class="f-item glass spot reveal" style="--d:.12s">
+          <div class="f-ic"><svg class="ico"><use href="#i-box"/></svg></div>
+          <div><h3>Supply chain &amp; S&amp;OP</h3><p>Demand planning, fill rate, cycle counts, inventory health and distributor performance.</p></div>
+        </div>
+        <div class="f-item glass spot reveal" style="--d:.18s">
+          <div class="f-ic"><svg class="ico"><use href="#i-code"/></svg></div>
+          <div><h3>Automation</h3><p>Python pipelines — pandas, Selenium, Playwright — that pull, clean and publish reports without manual effort.</p></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- EXPERIENCE -->
 <section id="experience">
-  <div class="sec-head reveal exp-wrap"><span class="sec-tag">Career Laps</span><div class="sec-tag-line"></div></div>
-  <h2 class="sec-title reveal">CAREER <span class="amber">HISTORY.</span></h2>
-  <div class="exp-row reveal">
-    <div><div class="exp-meta-date">NOV 2025 — PRESENT</div><div class="exp-meta-co">Al Habtoor Motors</div><div class="exp-meta-n">01</div></div>
-    <div>
-      <div class="exp-r">Data Analyst — Sales Operations</div>
-      <p class="exp-d">Sales performance tracking, variance analysis, and forecasting across MMC, FUSO, and JAC. Built end-to-end Python automation — SAP Fiori exports via Selenium, daily HTML→PDF forecast reports via Playwright — and standardised dealer reporting across 16 UAE branches.</p>
-      <div class="tags"><span class="tag">Python</span><span class="tag">Power BI</span><span class="tag">SAP Fiori</span><span class="tag">Selenium</span><span class="tag">Playwright</span><span class="tag">Forecasting</span><span class="tag">Dealer KPIs</span></div>
+  <div class="container">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Experience</span>
+      <h2 class="reveal" style="--d:.06s">Five roles, one thread: <span class="soft">making operations measurable.</span></h2>
     </div>
-  </div>
-  <div class="exp-row reveal">
-    <div><div class="exp-meta-date">JUL 2024 — SEP 2025</div><div class="exp-meta-co">DHL Supply Chain</div><div class="exp-meta-n">02</div></div>
-    <div>
-      <div class="exp-r">Business Analyst</div>
-      <p class="exp-d">Embedded within the Mercedes-Benz Trucks MEA account. WIMS analytics, cycle count programmes, fill rate improvement, and a distributor consultancy framework for commercial vehicle parts across MENA and Africa.</p>
-      <div class="tags"><span class="tag">WIMS</span><span class="tag">DMS</span><span class="tag">Fill Rate</span><span class="tag">Cycle Count</span><span class="tag">MENA Distribution</span></div>
-    </div>
-  </div>
-  <div class="exp-row reveal">
-    <div><div class="exp-meta-date">NOV 2022 — JUN 2024</div><div class="exp-meta-co">DSV Logistics</div><div class="exp-meta-n">03</div></div>
-    <div>
-      <div class="exp-r">Supply Chain Analyst</div>
-      <p class="exp-d">Mitsubishi FUSO parts and vehicle logistics. SAP/EWM warehouse reporting and KPI dashboards for inbound and outbound flows across the UAE distribution network.</p>
-      <div class="tags"><span class="tag">SAP EWM</span><span class="tag">Inventory</span><span class="tag">KPI Dashboards</span><span class="tag">Advanced Excel</span></div>
-    </div>
-  </div>
-  <div class="exp-row reveal">
-    <div><div class="exp-meta-date">AUG 2021 — AUG 2022</div><div class="exp-meta-co">Nearoo</div><div class="exp-meta-n">04</div></div>
-    <div>
-      <div class="exp-r">Logistics Operations</div>
-      <p class="exp-d">Built e-commerce logistics KPI frameworks and inventory operations from scratch for a fast-growing regional fulfilment startup.</p>
-      <div class="tags"><span class="tag">E-commerce</span><span class="tag">KPIs</span><span class="tag">Inventory</span><span class="tag">Operations</span></div>
+
+    <div class="exp glass reveal">
+      <div class="tabs" role="tablist" aria-label="Roles" id="tabs">
+        <span class="tab-ind" aria-hidden="true"></span>
+        <button class="tab" role="tab" id="tab-1" aria-controls="panel-1" aria-selected="true"><span class="t-co">Dubizzle Cars</span><span class="t-ro">Business Analyst</span></button>
+        <button class="tab" role="tab" id="tab-2" aria-controls="panel-2" aria-selected="false" tabindex="-1"><span class="t-co">Al Habtoor Motors</span><span class="t-ro">Data Analyst</span></button>
+        <button class="tab" role="tab" id="tab-3" aria-controls="panel-3" aria-selected="false" tabindex="-1"><span class="t-co">DHL Supply Chain</span><span class="t-ro">Business Analyst</span></button>
+        <button class="tab" role="tab" id="tab-4" aria-controls="panel-4" aria-selected="false" tabindex="-1"><span class="t-co">DSV Logistics</span><span class="t-ro">Supply Chain Analyst</span></button>
+        <button class="tab" role="tab" id="tab-5" aria-controls="panel-5" aria-selected="false" tabindex="-1"><span class="t-co">Nearoo</span><span class="t-ro">Logistics Operations</span></button>
+      </div>
+
+      <div class="panels">
+        <!-- TODO: replace MMM YYYY with your Dubizzle start month -->
+        <article class="panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1" tabindex="0">
+          <span class="p-idx" aria-hidden="true">01</span>
+          <div class="p-meta"><span>MMM YYYY — Present</span><span class="badge">Current</span></div>
+          <h3>Business Analyst</h3>
+          <div class="p-co">Dubizzle Cars</div>
+          <p>Own the monthly managed-inventory insights reporting for operations leadership — stock health, aging, turnover and churn — and build call-centre performance insights across the seller, buyer and retention teams. Reproducible Python pipelines take raw extracts all the way to leadership-ready decks.</p>
+          <ul class="tags"><li>Python</li><li>pandas</li><li>Periscope</li><li>Inventory Analytics</li><li>Call Centre KPIs</li><li>Leadership Reporting</li></ul>
+        </article>
+
+        <!-- TODO: replace MMM YYYY with your Al Habtoor end month -->
+        <article class="panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" tabindex="0" hidden>
+          <span class="p-idx" aria-hidden="true">02</span>
+          <div class="p-meta"><span>Nov 2025 — MMM YYYY</span></div>
+          <h3>Data Analyst — Sales Operations</h3>
+          <div class="p-co">Al Habtoor Motors</div>
+          <p>Sales performance tracking, variance analysis and forecasting across MMC, FUSO and JAC. Built end-to-end Python automation — SAP Fiori exports via Selenium, daily HTML→PDF forecast reports via Playwright — and standardised dealer reporting across 16 UAE branches.</p>
+          <ul class="tags"><li>Python</li><li>Power BI</li><li>SAP Fiori</li><li>Selenium</li><li>Playwright</li><li>Forecasting</li><li>Dealer KPIs</li></ul>
+        </article>
+
+        <article class="panel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" tabindex="0" hidden>
+          <span class="p-idx" aria-hidden="true">03</span>
+          <div class="p-meta"><span>Jul 2024 — Sep 2025</span></div>
+          <h3>Business Analyst</h3>
+          <div class="p-co">DHL Supply Chain</div>
+          <p>Embedded within the Mercedes-Benz Trucks MEA account. WIMS analytics, cycle count programmes, fill rate improvement, and a distributor consultancy framework for commercial vehicle parts across MENA and Africa.</p>
+          <ul class="tags"><li>WIMS</li><li>DMS</li><li>Fill Rate</li><li>Cycle Count</li><li>MENA Distribution</li></ul>
+        </article>
+
+        <article class="panel" role="tabpanel" id="panel-4" aria-labelledby="tab-4" tabindex="0" hidden>
+          <span class="p-idx" aria-hidden="true">04</span>
+          <div class="p-meta"><span>Nov 2022 — Jun 2024</span></div>
+          <h3>Supply Chain Analyst</h3>
+          <div class="p-co">DSV Logistics</div>
+          <p>Mitsubishi FUSO parts and vehicle logistics. SAP/EWM warehouse reporting and KPI dashboards for inbound and outbound flows across the UAE distribution network.</p>
+          <ul class="tags"><li>SAP EWM</li><li>Inventory</li><li>KPI Dashboards</li><li>Advanced Excel</li></ul>
+        </article>
+
+        <article class="panel" role="tabpanel" id="panel-5" aria-labelledby="tab-5" tabindex="0" hidden>
+          <span class="p-idx" aria-hidden="true">05</span>
+          <div class="p-meta"><span>Aug 2021 — Aug 2022</span></div>
+          <h3>Logistics Operations</h3>
+          <div class="p-co">Nearoo</div>
+          <p>Built e-commerce logistics KPI frameworks and inventory operations from scratch for a fast-growing regional fulfilment startup.</p>
+          <ul class="tags"><li>E-commerce</li><li>KPIs</li><li>Inventory</li><li>Operations</li></ul>
+        </article>
+
+        <div class="p-foot">
+          <span class="p-count" id="expCount">01 / 05</span>
+          <span class="p-hint">Use ← → to browse</span>
+          <div class="p-btns">
+            <button class="icon-btn" id="expPrev" type="button" aria-label="Previous role"><svg class="ico"><use href="#i-left"/></svg></button>
+            <button class="icon-btn" id="expNext" type="button" aria-label="Next role"><svg class="ico"><use href="#i-right"/></svg></button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- SKILLS -->
 <section id="skills">
-  <div class="sec-head reveal skills-wrap"><span class="sec-tag">Onboard Systems</span><div class="sec-tag-line"></div></div>
-  <h2 class="sec-title reveal">TECHNICAL <span class="teal">STACK.</span></h2>
-  <div class="skills-grid reveal">
-    <div class="sk">
-      <div class="sk-head">Analytics</div><h3>Data & Reporting</h3>
-      <ul class="sk-list"><li>Power BI / DAX</li><li>Qlik Sense</li><li>Advanced Excel & VBA</li><li>Python — pandas, Selenium, Playwright</li><li>SQL / Snowflake</li></ul>
+  <div class="container">
+    <div class="sec-head">
+      <span class="eyebrow reveal">Skills</span>
+      <h2 class="reveal" style="--d:.06s">The toolkit <span class="soft">behind the numbers.</span></h2>
     </div>
-    <div class="sk">
-      <div class="sk-head">Operations</div><h3>Supply Chain & S&OP</h3>
-      <ul class="sk-list"><li>Demand Planning & Forecasting</li><li>SAP / EWM</li><li>Inventory Management</li><li>IMS & Forecast Accuracy</li><li>Dealer & Distributor KPIs</li></ul>
-    </div>
-    <div class="sk">
-      <div class="sk-head">Domain</div><h3>Industry Knowledge</h3>
-      <ul class="sk-list"><li>Automotive OEM — MMC, FUSO, JAC, MB</li><li>Commercial Vehicle Distribution</li><li>UAE & MENA Market</li><li>Aftersales Parts Logistics</li><li>Multi-branch Retail Operations</li></ul>
+    <div class="skills">
+      <div class="sk glass spot reveal">
+        <div class="sk-top"><span class="sk-k">Analytics</span><div class="f-ic"><svg class="ico"><use href="#i-chart"/></svg></div></div>
+        <h3>Data &amp; Reporting</h3>
+        <ul><li>Power BI / DAX</li><li>Qlik Sense</li><li>Advanced Excel &amp; VBA</li><li>Python — pandas, Selenium, Playwright</li><li>SQL / Snowflake</li></ul>
+      </div>
+      <div class="sk glass spot reveal" style="--d:.08s">
+        <div class="sk-top"><span class="sk-k">Operations</span><div class="f-ic"><svg class="ico"><use href="#i-box"/></svg></div></div>
+        <h3>Supply Chain &amp; S&amp;OP</h3>
+        <ul><li>Demand Planning &amp; Forecasting</li><li>SAP / EWM</li><li>Inventory Management</li><li>IMS &amp; Forecast Accuracy</li><li>Dealer &amp; Distributor KPIs</li></ul>
+      </div>
+      <div class="sk glass spot reveal" style="--d:.16s">
+        <div class="sk-top"><span class="sk-k">Domain</span><div class="f-ic"><svg class="ico"><use href="#i-car"/></svg></div></div>
+        <h3>Industry Knowledge</h3>
+        <ul><li>Automotive OEM — MMC, FUSO, JAC, MB</li><li>Commercial Vehicle Distribution</li><li>UAE &amp; MENA Market</li><li>Aftersales Parts Logistics</li><li>Multi-branch Retail Operations</li></ul>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- CONTACT -->
 <section id="contact">
-  <div class="sec-head reveal contact-wrap"><span class="sec-tag">Comms</span><div class="sec-tag-line"></div></div>
-  <div class="ct-inner">
-    <div>
-      <h2 class="ct-title reveal">LET'S BUILD<br />SOMETHING<br /><span class="red">TOGETHER.</span></h2>
-      <p class="ct-sub reveal">Open to roles in sales operations, demand planning, supply chain analytics, and data strategy across automotive, FMCG, and distribution.</p>
-      <a href="mailto:hello@abdullahsiyadh.com" class="btn-red reveal" style="width:fit-content">Send Message →</a>
-    </div>
-    <div class="ct-links reveal">
-      <a href="mailto:hello@abdullahsiyadh.com" class="ct-link">
-        <div class="ct-link-info"><span class="ct-link-label">Email</span><span class="ct-link-val">hello@abdullahsiyadh.com</span></div>
-        <span class="ct-arrow">↗</span>
-      </a>
-      <a href="https://linkedin.com/in/abdullahsiyadh" target="_blank" class="ct-link">
-        <div class="ct-link-info"><span class="ct-link-label">LinkedIn</span><span class="ct-link-val">linkedin.com/in/abdullahsiyadh</span></div>
-        <span class="ct-arrow">↗</span>
-      </a>
-      <a href="https://abdullahsiyadh.com" class="ct-link">
-        <div class="ct-link-info"><span class="ct-link-label">Website</span><span class="ct-link-val">abdullahsiyadh.com</span></div>
-        <span class="ct-arrow">↗</span>
-      </a>
+  <div class="container">
+    <div class="contact glass spot reveal">
+      <div class="c-glow" aria-hidden="true"></div>
+      <div>
+        <span class="eyebrow">Contact</span>
+        <h2 class="c-title">Let's build something <span class="grad">together.</span></h2>
+        <p class="c-sub">Open to roles in sales operations, demand planning, supply chain analytics and data strategy across automotive, FMCG and distribution.</p>
+        <div class="c-btns">
+          <a href="mailto:hello@abdullahsiyadh.com" class="btn btn-primary">Send a message <svg class="ico"><use href="#i-arrow-r"/></svg></a>
+          <button type="button" class="btn btn-glass" data-copy-email><svg class="ico"><use href="#i-copy"/></svg><span>Copy email</span></button>
+        </div>
+      </div>
+      <div class="c-links">
+        <a href="mailto:hello@abdullahsiyadh.com" class="c-link">
+          <span class="c-ic"><svg class="ico"><use href="#i-mail"/></svg></span>
+          <span class="c-info"><span class="c-lab">Email</span><span class="c-val">hello@abdullahsiyadh.com</span></span>
+          <svg class="ico c-arrow"><use href="#i-arrow-ur"/></svg>
+        </a>
+        <a href="https://linkedin.com/in/abdullahsiyadh" target="_blank" rel="noopener" class="c-link">
+          <span class="c-ic"><svg class="ico"><use href="#i-linkedin"/></svg></span>
+          <span class="c-info"><span class="c-lab">LinkedIn</span><span class="c-val"><span class="hide-sm">linkedin.com/</span>in/abdullahsiyadh</span></span>
+          <svg class="ico c-arrow"><use href="#i-arrow-ur"/></svg>
+        </a>
+        <div class="c-link" style="cursor:default">
+          <span class="c-ic"><svg class="ico"><use href="#i-pin"/></svg></span>
+          <span class="c-info"><span class="c-lab">Location</span><span class="c-val">Dubai, UAE · GST (UTC+4)</span></span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-</div><!-- /#content -->
+</main>
 
 <footer>
-  <div class="f-left">© 2026 ABDULLAH SIYADH · abdullahsiyadh.com</div>
-  <div class="f-right"><div class="f-dot"></div>OPEN TO OPPORTUNITIES</div>
+  <div class="container">
+    <div class="foot">
+      <div class="foot-l"><span>© <span id="year">2026</span> Abdullah Siyadh</span><span class="sep">·</span><span>abdullahsiyadh.com</span></div>
+      <a href="#top" class="btn btn-glass btn-sm"><svg class="ico"><use href="#i-arrow-up"/></svg>Back to top</a>
+    </div>
+  </div>
 </footer>
 
+<div class="toast glass" id="toast" role="status" aria-live="polite"><svg class="ico"><use href="#i-check"/></svg><span id="toastMsg">Copied</span></div>
+
 <script>
-// ── PARTICLES (reduced on mobile for perf) ──
-const tc = document.getElementById('track-canvas');
-const tx = tc.getContext('2d');
-let TW, TH, dots = [];
-const isMobile = window.innerWidth < 768;
-function resizeTrack(){ TW = tc.width = window.innerWidth; TH = tc.height = window.innerHeight; }
-function mkDots(){
-  dots = [];
-  const density = isMobile ? 30000 : 15000;
-  const n = Math.floor(TW * TH / density);
-  for(let i=0;i<n;i++) dots.push({
-    x:Math.random()*TW, y:Math.random()*TH,
-    r:0.5+Math.random()*1.1,
-    vx:(Math.random()-0.5)*0.25, vy:(Math.random()-0.5)*0.25,
-    op:0.15+Math.random()*0.35,
-    col:Math.random()>0.6?'#E8002D':Math.random()>0.5?'#00D2BE':'#F5A623'
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const root = document.documentElement;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const EMAIL = 'hello@abdullahsiyadh.com';
+
+  /* ── Theme (follows system; toggle overrides for this visit) ── */
+  const themeBtn = $('#themeBtn');
+  const sysLight = matchMedia('(prefers-color-scheme: light)');
+  const theme = () => root.dataset.theme || (sysLight.matches ? 'light' : 'dark');
+  const syncTheme = () => {
+    const t = theme();
+    themeBtn.setAttribute('aria-label', t === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+    themeBtn.querySelector('use').setAttribute('href', t === 'dark' ? '#i-sun' : '#i-moon');
+    $('meta[name="theme-color"]').setAttribute('content', t === 'dark' ? '#07070b' : '#f6f3f1');
+  };
+  const flip = () => { root.dataset.theme = theme() === 'dark' ? 'light' : 'dark'; syncTheme(); };
+  themeBtn.addEventListener('click', () => {
+    if (!document.startViewTransition || reduce) return flip();
+    const r = themeBtn.getBoundingClientRect();
+    const x = r.left + r.width / 2, y = r.top + r.height / 2;
+    const end = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    document.startViewTransition(flip).ready.then(() => {
+      root.animate({ clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${end}px at ${x}px ${y}px)`] },
+        { duration: 650, easing: 'cubic-bezier(.2,.8,.2,1)', pseudoElement: '::view-transition-new(root)' });
+    }).catch(() => {});
   });
-}
-const connectDist = isMobile ? 0 : 90; // no connecting lines on mobile
-function drawTrack(){
-  tx.clearRect(0,0,TW,TH);
-  for(let i=0;i<dots.length;i++){
-    const d=dots[i];
-    d.x+=d.vx; d.y+=d.vy;
-    if(d.x<0)d.x=TW; if(d.x>TW)d.x=0;
-    if(d.y<0)d.y=TH; if(d.y>TH)d.y=0;
-    tx.beginPath(); tx.arc(d.x,d.y,d.r,0,Math.PI*2);
-    tx.fillStyle=d.col; tx.globalAlpha=d.op; tx.fill();
-    if(connectDist > 0){
-      for(let j=i+1;j<dots.length;j++){
-        const e=dots[j], dx=d.x-e.x, dy=d.y-e.y, dd=Math.sqrt(dx*dx+dy*dy);
-        if(dd<connectDist){
-          tx.beginPath(); tx.moveTo(d.x,d.y); tx.lineTo(e.x,e.y);
-          tx.strokeStyle='#E8002D'; tx.globalAlpha=(1-dd/connectDist)*0.06;
-          tx.lineWidth=0.5; tx.stroke();
-        }
-      }
-    }
-    tx.globalAlpha=1;
+  sysLight.addEventListener && sysLight.addEventListener('change', syncTheme);
+  syncTheme();
+
+  /* ── Nav: scrollspy + sliding indicator + progress ── */
+  const navLinks = $$('#links a');
+  const ind = $('#links .ind');
+  const mobLinks = $$('#mobileMenu a');
+  const sections = navLinks.map(a => $(a.hash));
+  const progress = $('#progress');
+  let active = null;
+  const moveInd = a => {
+    if (!a) { ind.style.opacity = 0; return; }
+    ind.style.opacity = 1;
+    ind.style.width = a.offsetWidth + 'px';
+    ind.style.transform = `translateX(${a.offsetLeft}px)`;
+  };
+  const setActive = id => {
+    if (id === active) return;
+    active = id;
+    navLinks.forEach(a => a.classList.toggle('active', a.hash === '#' + id));
+    mobLinks.forEach(a => a.classList.toggle('active', a.hash === '#' + id));
+    moveInd(navLinks.find(a => a.hash === '#' + id));
+  };
+  let ticking = false;
+  const onScroll = () => {
+    ticking = false;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    progress.style.transform = `scaleX(${max > 0 ? Math.min(scrollY / max, 1) : 0})`;
+    let id = null;
+    sections.forEach(s => { if (s && s.getBoundingClientRect().top < innerHeight * 0.45) id = s.id; });
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) id = sections[sections.length - 1].id;
+    setActive(id);
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+
+  /* ── Mobile menu ── */
+  const menuBtn = $('#menuBtn'), menu = $('#mobileMenu');
+  const setMenu = open => {
+    menu.classList.toggle('open', open);
+    menu.inert = !open;
+    menuBtn.setAttribute('aria-expanded', open);
+    menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    menuBtn.querySelector('use').setAttribute('href', open ? '#i-x' : '#i-menu');
+  };
+  menuBtn.addEventListener('click', () => setMenu(!menu.classList.contains('open')));
+  mobLinks.forEach(a => a.addEventListener('click', () => setMenu(false)));
+  addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
+  document.addEventListener('click', e => {
+    if (menu.classList.contains('open') && !menu.contains(e.target) && !menuBtn.contains(e.target)) setMenu(false);
+  });
+
+  /* ── Cursor glow in background ── */
+  if (fine && !reduce) {
+    const glow = $('#glow');
+    let gx = innerWidth / 2, gy = innerHeight / 3, tx = gx, ty = gy, running = false;
+    const loop = () => {
+      gx += (tx - gx) * 0.1; gy += (ty - gy) * 0.1;
+      glow.style.transform = `translate3d(${gx}px,${gy}px,0)`;
+      if (Math.abs(tx - gx) + Math.abs(ty - gy) > 0.5) requestAnimationFrame(loop); else running = false;
+    };
+    addEventListener('pointermove', e => {
+      tx = e.clientX; ty = e.clientY; glow.classList.add('on');
+      if (!running) { running = true; requestAnimationFrame(loop); }
+    }, { passive: true });
+    document.documentElement.addEventListener('pointerleave', () => glow.classList.remove('on'));
   }
-  requestAnimationFrame(drawTrack);
-}
-window.addEventListener('resize',()=>{ resizeTrack(); mkDots(); });
-resizeTrack(); mkDots(); drawTrack();
 
-// ── HUD TICKS ──
-let currentRPM = 0, targetRPM = 800;
-const MAX_RPM = 18000;
-const TICK_COUNT = isMobile ? 20 : 40;
-const gearMap = [[0,500,'P'],[500,3000,'1'],[3000,6000,'2'],[6000,10000,'3'],[10000,14000,'4'],[14000,16500,'5'],[16500,18000,'6']];
-const hudTicks = document.getElementById('hud-ticks');
-if(hudTicks){
-  for(let i=0;i<TICK_COUNT;i++){
-    const t = document.createElement('div');
-    t.className = 'hud-tick';
-    t.style.height = (i % 4 === 0) ? '100%' : '55%';
-    hudTicks.appendChild(t);
-  }
-}
+  /* ── Spotlight on glass cards ── */
+  $$('.spot').forEach(el => el.addEventListener('pointermove', e => {
+    const r = el.getBoundingClientRect();
+    el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  }));
 
-// ── HUD OFFSET ──
-function setHudOffset(){
-  const hud = document.getElementById('hud');
-  const content = document.getElementById('content');
-  if(hud && content) content.style.marginTop = hud.offsetHeight + 'px';
-}
-setHudOffset();
-window.addEventListener('resize', setHudOffset);
-
-// ── UPDATE HUD ──
-function updateHUD(rpm){
-  const pct = rpm / MAX_RPM;
-  const g = gearMap.find(([lo,hi]) => rpm >= lo && rpm < hi);
-  const fillEl = document.getElementById('hud-fill');
-  const numEl  = document.getElementById('hud-rpm-num');
-  const gearEl = document.getElementById('hud-gear');
-  const speedEl = document.getElementById('hud-speed');
-  const tSpeed = document.getElementById('t-speed');
-  if(fillEl) fillEl.style.width = (pct*100).toFixed(1)+'%';
-  if(numEl){ numEl.textContent = Math.round(rpm).toString().padStart(5,'0'); numEl.classList.toggle('redline', rpm >= 15000); }
-  if(gearEl && g) gearEl.textContent = g[2];
-  const spd = Math.round(rpm/90).toString().padStart(3,'0');
-  if(speedEl) speedEl.textContent = spd+' KM/H';
-  if(tSpeed) tSpeed.textContent = spd;
-  if(hudTicks){
-    const litCount = Math.floor(pct * TICK_COUNT);
-    hudTicks.querySelectorAll('.hud-tick').forEach((t,i)=>{
-      t.classList.remove('lit-normal','lit-mid','lit-red');
-      if(i < litCount){
-        const p = i/TICK_COUNT;
-        if(p < 0.55) t.classList.add('lit-normal');
-        else if(p < 0.83) t.classList.add('lit-mid');
-        else t.classList.add('lit-red');
-      }
+  /* ── Tilt on profile card ── */
+  const profile = $('#profile');
+  if (fine && !reduce && profile) {
+    profile.addEventListener('pointermove', e => {
+      const r = profile.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
+      profile.classList.add('tilting');
+      profile.style.transform = `perspective(900px) rotateX(${(-py * 7).toFixed(2)}deg) rotateY(${(px * 9).toFixed(2)}deg) translateY(-3px)`;
     });
+    profile.addEventListener('pointerleave', () => { profile.classList.remove('tilting'); profile.style.transform = ''; });
   }
-}
-function animateMeter(){
-  currentRPM += (targetRPM - currentRPM) * 0.07;
-  updateHUD(currentRPM);
-  requestAnimationFrame(animateMeter);
-}
-animateMeter();
 
-// ── SCROLL → RPM ──
-let lastScroll = 0, scrollDir = 1, bounceOffset = 0;
-function getScrollRPM(){
-  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-  if(maxScroll <= 0) return 800;
-  const progress = Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
-  return Math.min(18000, Math.max(800, 800 + progress * 17200 + bounceOffset));
-}
-window.addEventListener('scroll', () => {
-  const sy = window.scrollY;
-  const dir = sy > lastScroll ? 1 : -1;
-  if(dir !== scrollDir){ bounceOffset = dir===1?500:-500; setTimeout(()=>{ bounceOffset=0; },300); }
-  scrollDir = dir; lastScroll = sy;
-  targetRPM = getScrollRPM();
-}, { passive: true });
+  /* ── Reveal on scroll ── */
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  $$('.reveal').forEach(el => io.observe(el));
 
-// ── STICKY GAUGE (desktop only) ──
-if(!isMobile){
-  const sg = document.createElement('div');
-  sg.id = 'sticky-gauge';
-  sg.innerHTML = `<div id="sg-bar-wrap"><div id="sg-bar"></div></div><div id="sg-readout"><span id="sg-rpm">00000</span><span id="sg-label">RPM</span></div><div id="sg-gear-wrap"><span id="sg-gear">P</span></div>`;
-  document.body.appendChild(sg);
-  const ss = document.createElement('style');
-  ss.textContent = `#sticky-gauge{position:fixed;bottom:1.5rem;right:1.5rem;z-index:200;display:flex;flex-direction:column;align-items:center;gap:5px;background:rgba(3,3,5,0.93);border:1px solid rgba(232,0,45,0.25);padding:10px 12px;backdrop-filter:blur(16px);clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));min-width:82px}#sg-bar-wrap{width:100%;height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}#sg-bar{height:100%;width:0%;background:linear-gradient(90deg,#00D2BE,#F5A623,#E8002D);border-radius:2px;transition:width 0.08s linear}#sg-readout{display:flex;flex-direction:column;align-items:center;gap:1px}#sg-rpm{font-family:'Orbitron',monospace;font-size:0.88rem;font-weight:900;color:#F0EEF8;letter-spacing:0.04em;line-height:1}#sg-label{font-family:'Share Tech Mono',monospace;font-size:0.5rem;color:rgba(255,255,255,0.28);letter-spacing:0.18em}#sg-gear-wrap{width:26px;height:26px;background:#E8002D;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center}#sg-gear{font-family:'Orbitron',monospace;font-size:0.7rem;font-weight:900;color:#fff}`;
-  document.head.appendChild(ss);
-  function updateSticky(){
-    const pct = currentRPM/MAX_RPM;
-    const bar = document.getElementById('sg-bar');
-    const srpm = document.getElementById('sg-rpm');
-    const sgear = document.getElementById('sg-gear');
-    const g = gearMap.find(([lo,hi])=> currentRPM>=lo && currentRPM<hi);
-    if(bar){ bar.style.width=(pct*100).toFixed(1)+'%'; bar.style.background=currentRPM>15000?'#E8002D':'linear-gradient(90deg,#00D2BE,#F5A623,#E8002D)'; bar.style.boxShadow=currentRPM>15000?'0 0 5px #E8002D':'none'; }
-    if(srpm) srpm.textContent = Math.round(currentRPM).toString().padStart(5,'0');
-    if(sgear && g) sgear.textContent = g[2];
-    requestAnimationFrame(updateSticky);
+  /* ── Count-up stats ── */
+  const cio = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    cio.unobserve(e.target);
+    const el = e.target, end = +el.dataset.count, t0 = performance.now(), dur = 1300;
+    const step = t => {
+      const p = Math.min((t - t0) / dur, 1);
+      el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }), { threshold: 0.6 });
+  if (!reduce) $$('[data-count]').forEach(el => { el.textContent = '0'; cio.observe(el); });
+
+  /* ── Experience tabs ── */
+  const tabsEl = $('#tabs');
+  const tabs = $$('.tab', tabsEl);
+  const tabInd = $('.tab-ind', tabsEl);
+  const count = $('#expCount');
+  const n = tabs.length;
+  let cur = 0;
+  const pad = v => String(v).padStart(2, '0');
+  const placeTabInd = () => {
+    const t = tabs[cur];
+    tabInd.style.width = t.offsetWidth + 'px';
+    tabInd.style.height = t.offsetHeight + 'px';
+    tabInd.style.transform = `translate(${t.offsetLeft}px,${t.offsetTop}px)`;
+  };
+  const select = (i, focus) => {
+    cur = (i + n) % n;
+    tabs.forEach((t, j) => {
+      const on = j === cur;
+      t.setAttribute('aria-selected', on);
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    placeTabInd();
+    count.textContent = `${pad(cur + 1)} / ${pad(n)}`;
+    if (focus) tabs[cur].focus({ preventScroll: true });
+    if (tabsEl.scrollWidth > tabsEl.clientWidth) {
+      tabsEl.scrollTo({ left: tabs[cur].offsetLeft - 12, behavior: reduce ? 'auto' : 'smooth' });
+    }
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(i));
+    t.addEventListener('keydown', e => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); select(cur + 1, true); }
+      else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); select(cur - 1, true); }
+      else if (e.key === 'Home') { e.preventDefault(); select(0, true); }
+      else if (e.key === 'End') { e.preventDefault(); select(n - 1, true); }
+    });
+  });
+  $('#expPrev').addEventListener('click', () => select(cur - 1));
+  $('#expNext').addEventListener('click', () => select(cur + 1));
+  placeTabInd();
+  requestAnimationFrame(() => tabInd.classList.add('ready'));
+
+  /* ── Dubai clock ── */
+  const clock = $('#clock');
+  try {
+    const fmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Dubai', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+    const tick = () => { clock.textContent = fmt.format(new Date()) + ' GST'; };
+    tick(); setInterval(tick, 1000);
+  } catch (e) {}
+
+  /* ── Copy email + toast ── */
+  const toastEl = $('#toast'), toastMsg = $('#toastMsg');
+  let toastT;
+  const toast = msg => {
+    toastMsg.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastT);
+    toastT = setTimeout(() => toastEl.classList.remove('show'), 2400);
+  };
+  const fallbackCopy = () => {
+    const ta = document.createElement('textarea');
+    ta.value = EMAIL; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    ta.remove(); return ok;
+  };
+  $$('[data-copy-email]').forEach(btn => btn.addEventListener('click', async () => {
+    let ok = false;
+    try { await navigator.clipboard.writeText(EMAIL); ok = true; } catch (e) { ok = fallbackCopy(); }
+    toast(ok ? 'Email copied to clipboard' : EMAIL);
+    const use = btn.querySelector('use'), label = btn.querySelector('span');
+    if (ok && use) {
+      use.setAttribute('href', '#i-check'); if (label) label.textContent = 'Copied';
+      setTimeout(() => { use.setAttribute('href', '#i-copy'); if (label) label.textContent = 'Copy email'; }, 2000);
+    }
+  }));
+
+  /* ── Marquee: duplicate for a seamless loop ── */
+  const track = $('.track');
+  if (track && !reduce) {
+    const clone = track.firstElementChild.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    track.appendChild(clone);
   }
-  updateSticky();
-}
 
-// ── SCROLL REVEAL ──
-const obs = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); obs.unobserve(e.target); } });
-},{threshold:0.08});
-document.querySelectorAll('.reveal,.reveal-l').forEach(el=>obs.observe(el));
+  /* ── Misc ── */
+  $('#year').textContent = new Date().getFullYear();
+  const relayout = () => { placeTabInd(); const a = navLinks.find(x => x.hash === '#' + active); if (a) moveInd(a); };
+  addEventListener('resize', relayout);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
+  onScroll();
+})();
 </script>
 </body>
 </html>
