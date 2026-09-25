@@ -58,6 +58,8 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.186.1/+esm" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add('js')</script>
 <style>
@@ -384,6 +386,117 @@ footer{margin-top:90px}
 .js .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:var(--d,0s)}
 .js .reveal.in{opacity:1;transform:none}
 
+/* ───────────────── MOTION & 3D ───────────────── */
+html.lenis{scroll-behavior:auto}
+html.lenis,html.lenis body{height:auto}
+.bg canvas{position:absolute;left:0;top:0;width:100%;height:100vh;height:100lvh;display:block;opacity:0;transition:opacity 1.4s var(--ease)}
+.gl-ready .bg canvas{opacity:1}
+.gl-ready .blob{opacity:0!important;transition:opacity 1.4s var(--ease)}
+
+/* headings rise word by word */
+[data-split] .w{display:inline-block;overflow:hidden;vertical-align:top;padding:.04em .06em .16em;margin:-.04em -.06em -.16em}
+[data-split] .wi{display:inline-block;transform:translate3d(0,115%,0) rotate(5deg);transform-origin:0 100%;transition:transform 1.15s var(--ease);transition-delay:calc(var(--i,0) * 45ms + var(--d,0s))}
+.js .reveal[data-split].split-ready{opacity:1;transform:none}
+[data-split].in .wi{transform:none}
+
+/* 3D entrance for blocks and cards */
+.js .reveal:not([data-split]){transform:perspective(1100px) translate3d(0,38px,0) rotateX(12deg);transform-origin:50% 100%}
+.js .reveal.in:not([data-split]){transform:none}
+.js .eyebrow.reveal::before{width:0;transition:width .9s var(--ease) .15s}
+.js .eyebrow.reveal.in::before{width:22px}
+@keyframes panelIn{from{opacity:0;transform:perspective(1200px) translate3d(26px,0,0) rotateY(-10deg)}to{opacity:1;transform:none}}
+
+/* nav + logo orbit (appears once the shapes dock into the logo) */
+.nav{transition:box-shadow .4s var(--ease)}
+.nav.scrolled{box-shadow:inset 0 1px 0 var(--glass-hi),var(--ring),0 18px 44px -24px rgba(0,0,0,.6)}
+.mark{position:relative}
+.orbs{position:absolute;left:50%;top:50%;width:0;height:0;transform:rotate(-18deg);opacity:calc((var(--dock,0) - .82) * 5.5);pointer-events:none}
+.orb{position:absolute;left:0;top:0;animation:ox var(--dur,4s) ease-in-out infinite alternate}
+.orb::after{content:'';position:absolute;left:0;top:0;width:var(--sz,6px);height:var(--sz,6px);margin:calc(var(--sz,6px) / -2);border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#ffc2cc 55%,#ff3355);box-shadow:0 0 10px rgba(255,80,110,.75);animation:oy var(--dur,4s) ease-in-out infinite alternate;animation-delay:calc(var(--dur,4s) / -2)}
+.o1{--dur:1.7s;--r:24px;--sz:6px}
+.o2{--dur:2.6s;--r:29px;--sz:4px;animation-delay:-1s}
+.o3{--dur:3.8s;--r:33px;--sz:5px;animation-delay:-2.4s}
+.o3::after{background:transparent;border:1.5px solid rgba(255,255,255,.9)}
+@keyframes ox{from{transform:translateX(calc(var(--r,24px) * -1))}to{transform:translateX(var(--r,24px))}}
+@keyframes oy{from{transform:translateY(calc(var(--r,24px) * -.32)) scale(.55);opacity:.5}to{transform:translateY(calc(var(--r,24px) * .32)) scale(1.1);opacity:1}}
+
+/* hero */
+.hero-copy,.hero-card{will-change:transform}
+.pull-hint{display:inline-flex;align-items:center;gap:10px;margin-top:26px;font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);opacity:0;transform:translateY(6px);transition:opacity .8s var(--ease) 1.6s,transform .8s var(--ease) 1.6s}
+.gl-ready .pull-hint{opacity:1;transform:none}
+.pulled .pull-hint{color:var(--accent-ink)}
+.ph-dot{width:8px;height:8px;border-radius:50%;border:1.5px solid currentColor;position:relative}
+.ph-dot::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:1px solid currentColor;opacity:0;animation:ping 2.4s var(--ease) infinite}
+@keyframes ping{0%{transform:scale(.4);opacity:.9}80%,100%{transform:scale(1.4);opacity:0}}
+.ph-touch{display:none}
+@media (hover:none){.ph-fine{display:none}.ph-touch{display:inline}}
+
+/* statement band */
+.statement{position:relative;margin-top:120px;padding:130px 0 110px;overflow:hidden;color:#fff;background:linear-gradient(135deg,#ff2a4d 0%,#e8002d 45%,#a1001c 100%);isolation:isolate}
+.statement::before{content:'';position:absolute;inset:0;z-index:-1;background:radial-gradient(60% 80% at 85% 20%,rgba(255,170,90,.35),transparent 60%),radial-gradient(50% 60% at 10% 90%,rgba(60,0,20,.45),transparent 70%)}
+.st-ring{position:absolute;z-index:-1;right:-14vw;top:50%;width:min(92vw,1100px);aspect-ratio:1;border-radius:50%;transform:translateY(-50%) rotate(calc(var(--sp,0) * 160deg - 40deg));background:conic-gradient(from 0deg,rgba(255,255,255,.13) 0 72%,transparent 72% 100%);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - clamp(46px,8vw,120px)),#000 calc(100% - clamp(46px,8vw,120px)));mask:radial-gradient(farthest-side,transparent calc(100% - clamp(46px,8vw,120px)),#000 calc(100% - clamp(46px,8vw,120px)))}
+.st-sat{position:absolute;left:50%;top:0;width:clamp(18px,2.4vw,30px);aspect-ratio:1;border-radius:50%;background:#fff;transform:translate(-50%,calc(clamp(46px,8vw,120px) / 2 - 50%));box-shadow:0 0 40px rgba(255,255,255,.6)}
+.statement .eyebrow{color:rgba(255,255,255,.85)}
+.st-title{font-size:clamp(2.9rem,9.2vw,8.6rem);line-height:.9;letter-spacing:-.05em;text-transform:uppercase;font-weight:600;margin:26px 0 56px}
+.st-strike{position:relative;color:rgba(255,255,255,.55)}
+.st-strike::after{content:'';position:absolute;left:-.02em;right:-.02em;top:52%;height:.07em;border-radius:.05em;background:#fff;transform:scaleX(0);transform-origin:0 50%;transition:transform .9s var(--ease) 1s}
+.st-title.in .st-strike::after{transform:scaleX(1)}
+.st-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.25);padding-top:26px}
+.st-copy{max-width:560px;font-size:1.06rem;line-height:1.75;color:rgba(255,255,255,.88)}
+.st-tag{font-family:var(--mono);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.8)}
+
+/* skills orbit */
+.orbit-card{display:grid;grid-template-columns:.62fr 1.38fr;gap:12px;align-items:center;padding:36px 36px 36px 40px;border-radius:30px;margin-bottom:16px;overflow:hidden}
+.orbit-copy h3{font-size:clamp(1.55rem,2.7vw,2.2rem);font-weight:600;letter-spacing:-.035em;line-height:1.1;margin:14px 0 12px}
+.orbit-copy p{color:var(--muted);line-height:1.7;max-width:360px}
+.orbit-now{display:inline-flex;align-items:center;gap:10px;margin-top:22px;padding:9px 16px;border-radius:999px;background:var(--chip);border:1px solid var(--chip-border);font-size:.9rem;color:var(--muted);min-height:40px;transition:color .25s,border-color .25s,background .25s}
+.orbit-now.live{color:var(--text);border-color:rgba(255,90,116,.5);background:rgba(232,0,45,.1)}
+.orbit-now b{font-weight:600}
+.od{width:7px;height:7px;border-radius:50%;background:var(--accent-ink);box-shadow:0 0 0 4px rgba(232,0,45,.15)}
+.orbit-legend{list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:26px;font-size:.86rem;color:var(--muted)}
+.orbit-legend li{display:flex;align-items:center;gap:10px}
+.orbit-legend i{width:18px;height:18px;border-radius:50%;border:1.5px solid}
+.lg-d{border-color:rgba(255,90,116,.8)!important}
+.lg-o{border-color:rgba(245,166,35,.8)!important}
+.lg-a{border-color:var(--faint)!important}
+.orbit{position:relative;height:560px;perspective:1400px;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.orbit.dragging{cursor:grabbing}
+.orbit-plane{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;transform:rotateX(56deg)}
+.ring{position:absolute;left:0;top:0;border-radius:50%;border:1px solid color-mix(in srgb,var(--text) 16%,transparent);transform-style:preserve-3d}
+.ring.r1{border-color:rgba(255,90,116,.55)}
+.ring.r2{border-color:rgba(245,166,35,.5);border-style:dashed}
+.ring.r3{border-color:color-mix(in srgb,var(--text) 22%,transparent)}
+.orbit-core{position:absolute;left:0;top:0;width:74px;height:74px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;background:radial-gradient(circle at 32% 28%,#ff6a82,#e8002d 55%,#8f0019);box-shadow:0 20px 50px -14px rgba(232,0,45,.8),inset 0 2px 6px rgba(255,255,255,.35)}
+.chip{position:absolute;left:0;top:0;white-space:nowrap;padding:7px 14px;border-radius:999px;font-size:.86rem;font-weight:500;color:var(--text);background:var(--glass-2);border:1px solid var(--glass-border);box-shadow:inset 0 1px 0 var(--glass-hi),0 8px 20px -12px rgba(0,0,0,.5);cursor:pointer;will-change:transform,opacity;transition:background .2s,border-color .2s,color .2s,box-shadow .2s}
+.chip.c-d{border-color:rgba(255,90,116,.35)}
+.chip.c-o{border-color:rgba(245,166,35,.35)}
+.chip:hover,.chip.on{background:linear-gradient(180deg,#ff1f47,#e8002d);border-color:transparent;color:#fff;box-shadow:0 12px 28px -10px rgba(232,0,45,.85)}
+.orbit.compact .chip:not([data-core]){display:none}
+.sk{transition:border-color .3s,box-shadow .3s}
+.sk.hl{border-color:rgba(255,90,116,.6);box-shadow:0 0 0 1px rgba(255,90,116,.35),inset 0 1px 0 var(--glass-hi),var(--shadow)}
+.sk li.hl{color:var(--text)}
+.sk li.hl::before{transform:scale(1.7);opacity:1}
+
+@media (max-width:980px){
+  .orbit-card{grid-template-columns:1fr;padding:30px 26px}
+  .orbit{height:440px}
+  .orbit-legend{flex-direction:row;flex-wrap:wrap;gap:8px 18px}
+  .statement{padding:100px 0 90px;margin-top:90px}
+}
+@media (max-width:760px){
+  .orbit{height:320px}
+  .chip{font-size:.78rem;padding:6px 11px}
+  .orbit-core{width:56px;height:56px;font-size:.85rem}
+  .st-ring{right:-40vw;width:120vw}
+  .statement{padding:84px 0 76px;margin-top:84px}
+  .st-title{margin-bottom:40px}
+}
+@media (prefers-reduced-motion:reduce){
+  [data-split] .wi{transform:none}
+  .bg canvas{display:none}
+  .st-strike::after{transform:scaleX(1)}
+}
+
 /* view-transition theme switch */
 ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
 
@@ -469,6 +582,7 @@ footer{margin-top:90px}
 
 <!-- BACKGROUND -->
 <div class="bg" aria-hidden="true">
+  <canvas id="scene"></canvas>
   <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div>
   <div class="grid"></div>
   <div class="glow" id="glow"></div>
@@ -480,7 +594,7 @@ footer{margin-top:90px}
 <header class="nav-wrap">
   <nav class="nav glass" aria-label="Primary">
     <a href="#top" class="brand" aria-label="Abdullah Siyadh — home">
-      <span class="mark">AS</span><span class="brand-name">Abdullah Siyadh</span>
+      <span class="mark">AS<span class="orbs" aria-hidden="true"><i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i></span></span><span class="brand-name">Abdullah Siyadh</span>
     </a>
     <ul class="links" id="links">
       <li><a href="#about">About</a></li>
@@ -509,18 +623,19 @@ footer{margin-top:90px}
 <section class="hero" aria-label="Introduction">
   <div class="container">
     <div class="hero-grid">
-      <div>
+      <div class="hero-copy">
         <div class="pill glass reveal"><span class="dot"></span>Open to opportunities · Dubai, UAE</div>
-        <h1 class="reveal" style="--d:.08s">Abdullah<br><span class="grad">Siyadh</span></h1>
+        <h1 class="reveal" data-split style="--d:.08s">Abdullah<br><span class="grad">Siyadh</span></h1>
         <p class="tagline reveal" style="--d:.16s">Automotive data &amp; supply chain specialist</p>
         <p class="lead reveal" style="--d:.22s">I turn <strong>complex automotive data</strong> into decisions that move inventory, reduce variance and sharpen dealer performance — 4+ years across sales, S&amp;OP and supply chain in the UAE and MENA.</p>
         <div class="cta reveal" style="--d:.3s">
           <a href="#experience" class="btn btn-primary">View experience <svg class="ico"><use href="#i-arrow-r"/></svg></a>
           <button type="button" class="btn btn-glass" data-copy-email><svg class="ico"><use href="#i-copy"/></svg><span>Copy email</span></button>
         </div>
+        <p class="pull-hint" aria-hidden="true"><span class="ph-dot"></span><span class="ph-fine">Click anywhere to pull the shapes in</span><span class="ph-touch">Tap anywhere to pull the shapes in</span></p>
       </div>
 
-      <div class="reveal" style="--d:.2s">
+      <div class="hero-card"><div class="reveal" style="--d:.2s">
         <div class="profile glass spot" id="profile">
           <div class="pc-top">
             <div class="avatar" aria-hidden="true">AS</div>
@@ -540,7 +655,7 @@ footer{margin-top:90px}
             <a class="btn btn-glass btn-sm" href="mailto:hello@abdullahsiyadh.com"><svg class="ico"><use href="#i-mail"/></svg>Email</a>
           </div>
         </div>
-      </div>
+      </div></div>
     </div>
 
     <div class="stats">
@@ -565,13 +680,18 @@ footer{margin-top:90px}
         <div class="stat-l">Distribution scope, UAE to Africa</div>
       </div>
     </div>
+  </div>
+</section>
 
-    <div class="marquee glass reveal" aria-label="Tools I use">
-      <div class="track">
-        <ul class="group">
-          <li>Python</li><li>pandas</li><li>SQL</li><li>Snowflake</li><li>Power BI</li><li>DAX</li><li>Qlik Sense</li><li>Excel &amp; VBA</li><li>SAP Fiori</li><li>SAP EWM</li><li>Selenium</li><li>Playwright</li><li>Periscope</li><li>WIMS</li><li>DMS</li>
-        </ul>
-      </div>
+<!-- STATEMENT -->
+<section class="statement" id="approach" aria-label="Approach">
+  <div class="st-ring" aria-hidden="true"><span class="st-sat"></span></div>
+  <div class="container">
+    <span class="eyebrow st-eyebrow reveal">Approach</span>
+    <h2 class="st-title reveal" data-split>Not more <span class="st-strike">dashboards.</span><br>Better decisions.</h2>
+    <div class="st-foot">
+      <p class="st-copy reveal" style="--d:.2s">I work where sales analytics, S&amp;OP and distribution operations meet — where field complexity meets the data layer. The goal is never the report. It's the decision the report makes easier.</p>
+      <span class="st-tag reveal" style="--d:.3s">Sales analytics · S&amp;OP · Supply chain</span>
     </div>
   </div>
 </section>
@@ -581,7 +701,7 @@ footer{margin-top:90px}
   <div class="container">
     <div class="sec-head">
       <span class="eyebrow reveal">About</span>
-      <h2 class="reveal" style="--d:.06s">Where data meets <span class="soft">the automotive business.</span></h2>
+      <h2 class="reveal" data-split style="--d:.06s">Where data meets <span class="soft">the automotive business.</span></h2>
     </div>
     <div class="about-grid">
       <div class="about-card glass spot reveal">
@@ -613,7 +733,7 @@ footer{margin-top:90px}
   <div class="container">
     <div class="sec-head">
       <span class="eyebrow reveal">Experience</span>
-      <h2 class="reveal" style="--d:.06s">Five roles, one thread: <span class="soft">making operations measurable.</span></h2>
+      <h2 class="reveal" data-split style="--d:.06s">Five roles, one thread: <span class="soft">making operations measurable.</span></h2>
     </div>
 
     <div class="exp glass reveal">
@@ -690,20 +810,62 @@ footer{margin-top:90px}
   <div class="container">
     <div class="sec-head">
       <span class="eyebrow reveal">Skills</span>
-      <h2 class="reveal" style="--d:.06s">The toolkit <span class="soft">behind the numbers.</span></h2>
+      <h2 class="reveal" data-split style="--d:.06s">The toolkit <span class="soft">behind the numbers.</span></h2>
+    </div>
+    <div class="orbit-card glass spot reveal">
+      <div class="orbit-copy">
+        <span class="sk-k">Toolbox</span>
+        <h3>Everything I work with, in orbit.</h3>
+        <p>Drag to spin it. Hover or tap a tool to see where it sits in my stack.</p>
+        <div class="orbit-now" id="orbitNow" aria-live="polite"><span class="od"></span><span class="orbit-now-t">Hover a tool</span></div>
+        <ul class="orbit-legend">
+          <li><i class="lg-d"></i>Industry knowledge</li>
+          <li><i class="lg-o"></i>Supply chain &amp; S&amp;OP</li>
+          <li><i class="lg-a"></i>Data &amp; reporting</li>
+        </ul>
+      </div>
+      <div class="orbit" id="orbit" role="list" aria-label="Tools and skills in three orbits">
+        <div class="orbit-plane">
+          <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
+          <div class="orbit-core" aria-hidden="true"><span>AS</span></div>
+          <span class="chip c-d" data-g="d" data-li="0" data-ring="1" data-core>MMC</span>
+          <span class="chip c-d" data-g="d" data-li="0" data-ring="1" data-core>FUSO</span>
+          <span class="chip c-d" data-g="d" data-li="0" data-ring="1">JAC</span>
+          <span class="chip c-d" data-g="d" data-li="0" data-ring="1" data-core>MB Trucks</span>
+          <span class="chip c-d" data-g="d" data-li="2" data-ring="1" data-core>MENA</span>
+          <span class="chip c-d" data-g="d" data-li="3" data-ring="1">Aftersales parts</span>
+          <span class="chip c-o" data-g="o" data-li="0" data-ring="2" data-core>Forecasting</span>
+          <span class="chip c-o" data-g="o" data-li="0" data-ring="2" data-core>S&amp;OP</span>
+          <span class="chip c-o" data-g="o" data-li="1" data-ring="2" data-core>SAP EWM</span>
+          <span class="chip c-o" data-g="o" data-li="1" data-ring="2">SAP Fiori</span>
+          <span class="chip c-o" data-g="o" data-li="2" data-ring="2" data-core>Inventory</span>
+          <span class="chip c-o" data-g="o" data-li="2" data-ring="2">WIMS</span>
+          <span class="chip c-o" data-g="o" data-li="4" data-ring="2" data-core>Fill rate</span>
+          <span class="chip c-o" data-g="o" data-li="4" data-ring="2">Dealer KPIs</span>
+          <span class="chip c-a" data-g="a" data-li="3" data-ring="3" data-core>Python</span>
+          <span class="chip c-a" data-g="a" data-li="3" data-ring="3">Selenium</span>
+          <span class="chip c-a" data-g="a" data-li="3" data-ring="3">Playwright</span>
+          <span class="chip c-a" data-g="a" data-li="0" data-ring="3" data-core>Power BI</span>
+          <span class="chip c-a" data-g="a" data-li="1" data-ring="3">Qlik Sense</span>
+          <span class="chip c-a" data-g="a" data-li="2" data-ring="3" data-core>Excel</span>
+          <span class="chip c-a" data-g="a" data-li="4" data-ring="3" data-core>SQL</span>
+          <span class="chip c-a" data-g="a" data-li="4" data-ring="3" data-core>Snowflake</span>
+          <span class="chip c-a" data-g="a" data-li="-1" data-ring="3">Periscope</span>
+        </div>
+      </div>
     </div>
     <div class="skills">
-      <div class="sk glass spot reveal">
+      <div class="sk glass spot reveal" data-g="a">
         <div class="sk-top"><span class="sk-k">Analytics</span><div class="f-ic"><svg class="ico"><use href="#i-chart"/></svg></div></div>
         <h3>Data &amp; Reporting</h3>
         <ul><li>Power BI / DAX</li><li>Qlik Sense</li><li>Advanced Excel &amp; VBA</li><li>Python — pandas, Selenium, Playwright</li><li>SQL / Snowflake</li></ul>
       </div>
-      <div class="sk glass spot reveal" style="--d:.08s">
+      <div class="sk glass spot reveal" data-g="o" style="--d:.08s">
         <div class="sk-top"><span class="sk-k">Operations</span><div class="f-ic"><svg class="ico"><use href="#i-box"/></svg></div></div>
         <h3>Supply Chain &amp; S&amp;OP</h3>
         <ul><li>Demand Planning &amp; Forecasting</li><li>SAP / EWM</li><li>Inventory Management</li><li>IMS &amp; Forecast Accuracy</li><li>Dealer &amp; Distributor KPIs</li></ul>
       </div>
-      <div class="sk glass spot reveal" style="--d:.16s">
+      <div class="sk glass spot reveal" data-g="d" style="--d:.16s">
         <div class="sk-top"><span class="sk-k">Domain</span><div class="f-ic"><svg class="ico"><use href="#i-car"/></svg></div></div>
         <h3>Industry Knowledge</h3>
         <ul><li>Automotive OEM — MMC, FUSO, JAC, MB</li><li>Commercial Vehicle Distribution</li><li>UAE &amp; MENA Market</li><li>Aftersales Parts Logistics</li><li>Multi-branch Retail Operations</li></ul>
@@ -719,7 +881,7 @@ footer{margin-top:90px}
       <div class="c-glow" aria-hidden="true"></div>
       <div class="c-left">
         <span class="eyebrow">Contact</span>
-        <h2 class="c-title">Let's build something <span class="grad">together.</span></h2>
+        <h2 class="c-title reveal" data-split style="--d:.15s">Let's build something <span class="grad">together.</span></h2>
         <p class="c-sub">Open to roles in sales operations, demand planning, supply chain analytics and data strategy across automotive, FMCG and distribution.</p>
         <div class="c-links">
           <a href="mailto:hello@abdullahsiyadh.com" class="c-link">
@@ -803,6 +965,7 @@ footer{margin-top:90px}
 
 <div class="toast glass" id="toast" role="status" aria-live="polite"><svg class="ico"><use href="#i-check"/></svg><span id="toastMsg">Copied</span></div>
 
+<script src="/motion.js"></script>
 <script>
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
@@ -1094,5 +1257,7 @@ footer{margin-top:90px}
   onScroll();
 })();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js" async onload="window.__initLenis && window.__initLenis()"></script>
+<script type="module" src="/scene.js"></script>
 </body>
 </html>
